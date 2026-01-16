@@ -46,6 +46,11 @@ java hello
 | **Strings** | `I HAVE COME HERE TO CHEW BUBBLEGUM` | They Live |
 | **Not Equal (!=)** | `IT'S JUST BEEN REVOKED` | Lethal Weapon 2 |
 | **Less Than (<)** | `YOU'RE THE DISEASE AND I'M THE CURE` | Cobra |
+| **Greater or Equal (>=)** | `I'M GETTING TOO OLD FOR THIS` | Lethal Weapon |
+| **Less or Equal (<=)** | `BENEATH YOU` | Blade |
+| **Logical NOT** | `NEGATIVE` | Predator 2 |
+| **Increment (++)** | `ONE MORE TIME` | Daft Punk / Various |
+| **Decrement (--)** | `COUNTDOWN` | Various |
 | **Comments** | `I'M BATMAN` | Batman (1989) |
 | **Try/Catch** | `LET'S SEE WHAT YOU'VE GOT` / `GOTCHA` | Various |
 | **Random** | `GO AHEAD MAKE MY DAY` | Dirty Harry |
@@ -70,7 +75,7 @@ See [ACTIONC_SPEC.md](ACTIONC_SPEC.md) for the complete language specification.
 | [`GET TO THE CHOPPER`](http://www.youtube.com/watch?v=-9-Te-DPbSE) | Begin Assignment | |
 | [`YOU SET US UP`](http://www.youtube.com/watch?v=lwqzA6F7nws) | Set Initial Value | |
 
-### Predator
+### Predator / Predator 2
 
 | Keyword | Purpose | Clip |
 |---------|---------|------|
@@ -78,6 +83,7 @@ See [ACTIONC_SPEC.md](ACTIONC_SPEC.md) for the complete language specification.
 | [`WHAT THE FUCK DID I DO WRONG`](http://www.youtube.com/watch?v=oGcRTJK43OM) | Parse Error | |
 | `I AIN'T GOT TIME TO BLEED` | Declare Array | [Clip](https://www.youtube.com/watch?v=PrMlHn1R_hU) |
 | `WHAT ARE YOU` | Type Check | [Clip](https://www.youtube.com/watch?v=qlicWUDf5MM) |
+| `NEGATIVE` | Logical NOT | [Clip](https://www.youtube.com/watch?v=NxbFHGVVKKA) |
 
 ### Commando
 
@@ -239,6 +245,19 @@ See [ACTIONC_SPEC.md](ACTIONC_SPEC.md) for the complete language specification.
 |---------|---------|------|
 | `I AM THE LAW` | Assert | [Clip](https://www.youtube.com/watch?v=wvJiYrRcfQo) |
 
+### Blade
+
+| Keyword | Purpose | Clip |
+|---------|---------|------|
+| `BENEATH YOU` | Less Than or Equal (<=) | [Clip](https://www.youtube.com/watch?v=tKwZB3A_T1E) |
+
+### Various / General
+
+| Keyword | Purpose | Notes |
+|---------|---------|-------|
+| `ONE MORE TIME` | Increment (++) | Inspired by action movie montages |
+| `COUNTDOWN` | Decrement (--) | Used in bomb defusal scenes |
+
 ### Escape from New York (Snake Plissken)
 
 | Keyword | Purpose | Clip |
@@ -277,6 +296,49 @@ See [ACTIONC_SPEC.md](ACTIONC_SPEC.md) for the complete language specification.
 | Keyword | Purpose | Clip |
 |---------|---------|------|
 | `THE CLOCK IS TICKING` | Timer Start | |
+
+---
+
+## Example: New Comparison Operators (Tier 1)
+
+```actionc
+IT'S SHOWTIME
+    I'M BATMAN This is a comment - I'M BATMAN!
+
+    HEY CHRISTMAS TREE x
+    YOU SET US UP 5
+
+    HEY CHRISTMAS TREE y
+    YOU SET US UP 10
+
+    I'M BATMAN Check if x is not equal to y
+    BECAUSE I'M GOING TO SAY PLEASE x IT'S JUST BEEN REVOKED y
+        TALK TO THE HAND "x != y is true"
+    YOU HAVE NO RESPECT FOR LOGIC
+
+    I'M BATMAN Check if x is less than y
+    BECAUSE I'M GOING TO SAY PLEASE x YOU'RE THE DISEASE AND I'M THE CURE y
+        TALK TO THE HAND "x < y is true"
+    YOU HAVE NO RESPECT FOR LOGIC
+
+    I'M BATMAN Increment x twice
+    ONE MORE TIME x
+    ONE MORE TIME x
+    TALK TO THE HAND x
+
+    I'M BATMAN Decrement y
+    COUNTDOWN y
+    TALK TO THE HAND y
+YOU HAVE BEEN TERMINATED
+```
+
+Output:
+```
+x != y is true
+x < y is true
+7
+9
+```
 
 ---
 

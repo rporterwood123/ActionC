@@ -1,31 +1,17 @@
-import AssemblyKeys._
-
-assemblySettings
-
 name := "ArnoldC"
 
 version := "0.1"
 
-scalaVersion := "2.11.4"
+scalaVersion := "2.12.18"
 
-ideaExcludeFolders += ".idea"
+libraryDependencies += "org.ow2.asm" % "asm-commons" % "9.6"
 
-ideaExcludeFolders += ".idea_modules"
+libraryDependencies += "org.parboiled" %% "parboiled-scala" % "1.3.1"
 
-libraryDependencies += "asm" % "asm-commons" % "3.3.1"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.17" % "test"
 
-libraryDependencies += "org.parboiled" %% "parboiled-scala" % "1.1.6"
+Test / parallelExecution := false
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.1" % "test"
-
-libraryDependencies ++= Seq(
-  "javax.speech" % "jsapi" % "1.0",
-  "org.mobicents.external.freetts" % "cmu_us_kal" % "1.0",
-  "org.mobicents.external.freetts" % "freetts" % "1.0",
-  "org.mobicents.external.freetts" % "en_us" % "1.0",
-  "org.mobicents.external.freetts" % "cmulex" % "1.0"
-)
-
-resolvers += "Speech" at "http://maven.it.su.se/it.su.se/maven2"
-
-parallelExecution in Test := false
+// Assembly settings for creating fat JAR
+assembly / assemblyJarName := "ArnoldC.jar"
+assembly / mainClass := Some("org.arnoldc.ArnoldC")

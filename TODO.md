@@ -8,40 +8,40 @@
 |-----------|--------|
 | Language Specification | Complete - see [ACTIONC_SPEC.md](ACTIONC_SPEC.md) |
 | Documentation | Complete - see [README.md](README.md) |
-| Compiler Implementation | Not started - still ArnoldC only |
+| Compiler Implementation | **Tier 1 Complete** — 124 tests passing |
 
 The spec defines 100+ new keywords and features. This roadmap tracks implementation progress.
 
 ---
 
-## Tier 1: Quick Wins (High Value, Low Complexity)
+## Tier 1: Quick Wins (High Value, Low Complexity) ✅ COMPLETE
 
 These features require minimal parser/compiler changes but significantly improve usability.
 
 ### Comments
-- [ ] `I'M BATMAN` — Single-line comment (ignore rest of line)
+- [x] `I'M BATMAN` — Single-line comment (ignore rest of line)
 - [ ] `GATHER ROUND` / `DISMISSED` — Block comments
 
 **Implementation:** Add comment rules to lexer, discard tokens.
 
 ### Missing Comparison Operators
-- [ ] `IT'S JUST BEEN REVOKED` — Not equal (`!=`)
-- [ ] `YOU'RE THE DISEASE AND I'M THE CURE` — Less than (`<`)
-- [ ] `I'M GETTING TOO OLD FOR THIS` — Greater than or equal (`>=`)
-- [ ] `BENEATH YOU` — Less than or equal (`<=`)
+- [x] `IT'S JUST BEEN REVOKED` — Not equal (`!=`)
+- [x] `YOU'RE THE DISEASE AND I'M THE CURE` — Less than (`<`)
+- [x] `I'M GETTING TOO OLD FOR THIS` — Greater than or equal (`>=`)
+- [x] `BENEATH YOU` — Less than or equal (`<=`)
 
 **Implementation:** Add new comparison nodes, generate `IF_ICMPNE`, `IF_ICMPLT`, `IF_ICMPGE`, `IF_ICMPLE` bytecode.
 
 ### Logical NOT
-- [ ] `NEGATIVE` — Logical NOT operator
+- [x] `NEGATIVE` — Logical NOT operator
 
 **Implementation:** Add NOT node, generate `ICONST_1`, `IXOR` bytecode pattern.
 
 ### Increment/Decrement
-- [ ] `ONE MORE TIME` — Increment (`++`)
-- [ ] `COUNTDOWN` — Decrement (`--`)
+- [x] `ONE MORE TIME` — Increment (`++`)
+- [x] `COUNTDOWN` — Decrement (`--`)
 
-**Implementation:** Syntactic sugar for `GET UP 1` / `GET DOWN 1`.
+**Implementation:** Uses JVM `IINC` instruction for efficient increment/decrement.
 
 ---
 
