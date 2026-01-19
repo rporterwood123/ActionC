@@ -6,6 +6,8 @@
 
 ActionC is an esoteric programming language based on iconic one-liners from action movies. It extends the original [ArnoldC](https://github.com/lhartikk/ArnoldC) with quotes from Die Hard, Aliens, Lethal Weapon, Robocop, The Matrix, and many more classics.
 
+**297 tests passing** | **Tier 5 Complete**
+
 ---
 
 ## Motivation
@@ -39,28 +41,226 @@ java hello
 
 ## What's New in ActionC
 
+### Control Flow
 | Feature | Keyword | Movie |
 |---------|---------|-------|
-| **Arrays** | `I AIN'T GOT TIME TO BLEED` | Predator |
 | **For Loops** | `LET'S ROCK` / `GAME OVER MAN GAME OVER` | Aliens |
-| **Break/Continue** | `GET OUT` / `KEEP MOVING` | Various |
+| **Break** | `GET OUT` | Various |
+| **Continue** | `KEEP MOVING` | Various |
 | **Switch/Case** | `CHOOSE YOUR DESTINY` / `FINISH HIM` | Mortal Kombat |
+
+### Data Types
+| Feature | Keyword | Movie |
+|---------|---------|-------|
 | **Strings** | `I HAVE COME HERE TO CHEW BUBBLEGUM` | They Live |
 | **String Concat** | `AND KICK ASS` (chained) | They Live |
+| **Arrays** | `I AIN'T GOT TIME TO BLEED` | Predator |
+| **Floats** | `NOW I HAVE A MACHINE GUN` / `HO HO HO` | Die Hard |
+
+### Operators
+| Feature | Keyword | Movie |
+|---------|---------|-------|
 | **Not Equal (!=)** | `IT'S JUST BEEN REVOKED` | Lethal Weapon 2 |
 | **Less Than (<)** | `YOU'RE THE DISEASE AND I'M THE CURE` | Cobra |
 | **Greater or Equal (>=)** | `I'M GETTING TOO OLD FOR THIS` | Lethal Weapon |
 | **Less or Equal (<=)** | `BENEATH YOU` | Blade |
 | **Logical NOT** | `NEGATIVE` | Predator 2 |
-| **Increment (++)** | `ONE MORE TIME` | Daft Punk / Various |
-| **Decrement (--)** | `COUNTDOWN` | Various |
-| **Comments** | `I'M BATMAN` | Batman (1989) |
-| **Try/Catch** | `LET'S SEE WHAT YOU'VE GOT` / `GOTCHA` | Various |
+| **Bitwise AND** | `WINNERS GO HOME AND DATE THE PROM QUEEN` | The Rock |
+| **Bitwise OR** | `DEAD OR ALIVE YOU'RE COMING WITH ME` | Robocop |
+| **Bitwise XOR** | `FRIEND OR FOE` | Various |
+| **Left Shift** | `MOVE IT` | Various |
+| **Right Shift** | `FALL BACK` | Various |
+
+### Comments
+| Feature | Keyword | Movie |
+|---------|---------|-------|
+| **Single-line** | `I'M BATMAN` | Batman (1989) |
+| **Block comments** | `GATHER ROUND` / `DISMISSED` | Various |
+
+### Math Functions
+| Feature | Keyword | Movie |
+|---------|---------|-------|
 | **Random** | `GO AHEAD MAKE MY DAY` | Dirty Harry |
-| **Null** | `@THERE IS NO SPOON` | The Matrix |
-| **Break** | `GET OUT` | Various |
+| **Absolute Value** | `NO MORE HALF MEASURES` | Breaking Bad |
+| **Square Root** | `GET TO THE ROOT OF` | Pun |
+| **Floor** | `HIT THE FLOOR` | Various |
+| **Ceiling** | `THROUGH THE ROOF` | Various |
+| **Sin/Cos/Tan** | `IT'S ALL IN THE REFLEXES` | Big Trouble in Little China |
+
+### String Functions
+| Feature | Keyword | Movie |
+|---------|---------|-------|
+| **Length** | `HOW LONG IS THIS THING` | Various |
+| **Substring** | `GIVE ME A PIECE OF ... FROM ... TO` | Various |
+| **Uppercase** | `SAY IT LOUDER` | Various |
+| **Lowercase** | `KEEP YOUR VOICE DOWN` | Various |
+| **Trim** | `CUT THE FAT FROM` | Various |
+| **Contains** | `YOU TALKING TO ME ABOUT` | Taxi Driver |
+
+### Time Functions
+| Feature | Keyword | Movie |
+|---------|---------|-------|
+| **Current Time** | `WHAT TIME IS IT` | Various |
+| **Sleep** | `CHILL OUT FOR` | Mr. Freeze - Batman |
+
+### File I/O
+| Feature | Keyword | Movie |
+|---------|---------|-------|
+| **File Exists** | `HONEY I'M HOME` | The Shining |
+| **Read File** | `WHAT'S IN THE BOX` | Se7en |
+| **Write File** | `WRITE THAT DOWN ... TO` | Various |
+| **Delete File** | `SEAL THE EXITS` | Various |
+
+### Error Handling
+| Feature | Keyword | Movie |
+|---------|---------|-------|
+| **Try** | `LET'S SEE WHAT YOU'VE GOT` | Various |
+| **Throw** | `WELCOME TO THE PARTY PAL` | Die Hard |
+| **Catch** | `GOTCHA` | Various |
+| **Finally** | `CLEAN UP ON AISLE FIVE` | Various |
+| **Assert** | `I AM THE LAW` | Judge Dredd |
+
+### Utility
+| Feature | Keyword | Movie |
+|---------|---------|-------|
+| **Increment (++)** | `ONE MORE TIME` | Various |
+| **Decrement (--)** | `COUNTDOWN` | Various |
 
 See [ACTIONC_SPEC.md](ACTIONC_SPEC.md) for the complete language specification.
+
+---
+
+## Examples
+
+### For Loop with Break
+
+```actionc
+IT'S SHOWTIME
+    LET'S ROCK i FROM 1 TO 10
+        BECAUSE I'M GOING TO SAY PLEASE i YOU ARE NOT YOU YOU ARE ME 5
+            TALK TO THE HAND "Found 5!"
+            GET OUT
+        YOU HAVE NO RESPECT FOR LOGIC
+        TALK TO THE HAND i
+    GAME OVER MAN GAME OVER
+YOU HAVE BEEN TERMINATED
+```
+
+### String Manipulation
+
+```actionc
+IT'S SHOWTIME
+    I HAVE COME HERE TO CHEW BUBBLEGUM greeting
+    AND KICK ASS "  hello world  "
+
+    I'M BATMAN Trim and uppercase
+    I HAVE COME HERE TO CHEW BUBBLEGUM result
+    AND KICK ASS SAY IT LOUDER CUT THE FAT FROM greeting
+
+    TALK TO THE HAND result
+    I'M BATMAN Output: HELLO WORLD
+
+    I'M BATMAN Get length
+    HEY CHRISTMAS TREE len
+    YOU SET US UP HOW LONG IS THIS THING result
+    TALK TO THE HAND len
+YOU HAVE BEEN TERMINATED
+```
+
+### Arrays
+
+```actionc
+IT'S SHOWTIME
+    I'M BATMAN Declare array of 5 integers
+    I AIN'T GOT TIME TO BLEED scores WITH 5 UGLY MOTHERFUCKERS
+
+    I'M BATMAN Set elements
+    PUT 100 IN LINE scores AT 0
+    PUT 95 IN LINE scores AT 1
+    PUT 87 IN LINE scores AT 2
+
+    I'M BATMAN Print array length
+    TALK TO THE HAND HOW MANY OF THEM scores
+
+    I'M BATMAN Access element
+    TALK TO THE HAND GET IN LINE scores AT 0
+YOU HAVE BEEN TERMINATED
+```
+
+### Math Functions
+
+```actionc
+IT'S SHOWTIME
+    I'M BATMAN Absolute value
+    HEY CHRISTMAS TREE absVal
+    YOU SET US UP NO MORE HALF MEASURES -42
+    TALK TO THE HAND absVal
+    I'M BATMAN Output: 42
+
+    I'M BATMAN Square root
+    HEY CHRISTMAS TREE sqrtVal
+    YOU SET US UP GET TO THE ROOT OF 16
+    TALK TO THE HAND sqrtVal
+    I'M BATMAN Output: 4
+
+    I'M BATMAN Trig (returns value * 1000 for precision)
+    HEY CHRISTMAS TREE cosVal
+    YOU SET US UP IT'S ALL IN THE REFLEXES COS 0
+    TALK TO THE HAND cosVal
+    I'M BATMAN Output: 1000 (cos(0) = 1.0)
+YOU HAVE BEEN TERMINATED
+```
+
+### File I/O
+
+```actionc
+IT'S SHOWTIME
+    I'M BATMAN Write to file
+    WRITE THAT DOWN "Hello from ActionC!" TO "test.txt"
+
+    I'M BATMAN Check if file exists
+    HEY CHRISTMAS TREE exists
+    YOU SET US UP HONEY I'M HOME "test.txt"
+    TALK TO THE HAND exists
+    I'M BATMAN Output: 1
+
+    I'M BATMAN Read file contents
+    I HAVE COME HERE TO CHEW BUBBLEGUM content
+    AND KICK ASS WHAT'S IN THE BOX "test.txt"
+    TALK TO THE HAND content
+
+    I'M BATMAN Delete file
+    SEAL THE EXITS "test.txt"
+YOU HAVE BEEN TERMINATED
+```
+
+### Error Handling
+
+```actionc
+IT'S SHOWTIME
+    LET'S SEE WHAT YOU'VE GOT
+        TALK TO THE HAND "In try block"
+        WELCOME TO THE PARTY PAL "Oops!"
+        TALK TO THE HAND "This won't print"
+    GOTCHA
+        TALK TO THE HAND "Caught exception!"
+    THAT'S A WRAP
+YOU HAVE BEEN TERMINATED
+```
+
+### Block Comments
+
+```actionc
+IT'S SHOWTIME
+    GATHER ROUND
+        This is a multi-line comment.
+        It can span as many lines as needed.
+        Perfect for documentation!
+    DISMISSED
+
+    TALK TO THE HAND "Hello World"
+YOU HAVE BEEN TERMINATED
+```
 
 ---
 
@@ -68,435 +268,121 @@ See [ACTIONC_SPEC.md](ACTIONC_SPEC.md) for the complete language specification.
 
 ### Terminator / Terminator 2 (Arnold Schwarzenegger)
 
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| [`@I LIED`](http://www.youtube.com/watch?v=_wk-jT9rn-8) | False | |
-| [`@NO PROBLEMO`](http://www.youtube.com/watch?v=CtNb1dnEaSQ) | True | |
-| [`I'LL BE BACK`](http://www.youtube.com/watch?v=-YEG9DgRHhA) | Return | |
-| [`HASTA LA VISTA, BABY`](http://www.youtube.com/watch?v=Hhm7aWp8gvc) | End Method | |
-| [`I NEED YOUR CLOTHES YOUR BOOTS AND YOUR MOTORCYCLE`](http://www.youtube.com/watch?v=FWmH9ylqYYQ) | Method Arguments | |
-| [`GET TO THE CHOPPER`](http://www.youtube.com/watch?v=-9-Te-DPbSE) | Begin Assignment | |
-| [`YOU SET US UP`](http://www.youtube.com/watch?v=lwqzA6F7nws) | Set Initial Value | |
-
-### Predator / Predator 2
-
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| [`STICK AROUND`](http://www.youtube.com/watch?v=wDztrw_0N8M) | While Loop | |
-| [`WHAT THE FUCK DID I DO WRONG`](http://www.youtube.com/watch?v=oGcRTJK43OM) | Parse Error | |
-| `I AIN'T GOT TIME TO BLEED` | Declare Array | [Clip](https://www.youtube.com/watch?v=PrMlHn1R_hU) |
-| `WHAT ARE YOU` | Type Check | [Clip](https://www.youtube.com/watch?v=qlicWUDf5MM) |
-| `NEGATIVE` | Logical NOT | [Clip](https://www.youtube.com/watch?v=NxbFHGVVKKA) |
-
-### Commando
-
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| [`LET OFF SOME STEAM BENNET`](http://www.youtube.com/watch?v=19R2fDXCzcM) | Greater Than (>) | |
-
-### Total Recall
-
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| [`CONSIDER THAT A DIVORCE`](http://www.youtube.com/watch?v=RYtQMhnBtTw) | Logical OR | |
-| [`GET YOUR ASS TO MARS`](http://www.youtube.com/watch?v=HkkibBYm2WI) | Assign From Method Call | |
-
-### The Running Man
-
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| [`HERE IS MY INVITATION`](http://www.youtube.com/watch?v=RrPXRkJ_P90) | Set Value | |
-
-### Twins
-
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| [`KNOCK KNOCK`](http://www.youtube.com/watch?v=ZQ_Q2b_aXjk) | Logical AND | |
-| [`BECAUSE I'M GOING TO SAY PLEASE`](http://www.youtube.com/watch?v=MiB7GLyvvJQ) | If Statement | |
-
-### Kindergarten Cop
-
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| [`IT'S SHOWTIME`](http://www.youtube.com/watch?v=TKTL2EDTFSo) | Begin Main | |
-| [`LISTEN TO ME VERY CAREFULLY`](http://www.youtube.com/watch?v=uCwrOpnyXeo) | Declare Method | |
-
-### Last Action Hero
-
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| [`YOU ARE NOT YOU YOU ARE ME`](http://www.youtube.com/watch?v=A1-wUV0-_JY) | Equal To (==) | |
-| [`BULLSHIT`](http://www.youtube.com/watch?v=c4psKYpfnYs) | Else | |
-| [`YOU HAVE NO RESPECT FOR LOGIC`](http://youtu.be/uGstM8QMCjQ?t=1m23s) | End If | |
-
-### Sixth Day
-
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| [`HEY CHRISTMAS TREE`](http://www.youtube.com/watch?v=PZwwqjcEDUQ) | Declare Integer | |
-| [`ENOUGH TALK`](http://www.youtube.com/watch?v=rk9WHasIZk0) | End Assignment | |
-
-### Jingle All The Way
-
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| [`YOU HAVE BEEN TERMINATED`](http://www.youtube.com/watch?v=iy_BBBGBpqA) | End Main | |
-
-### Eraser
-
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| [`YOU'RE FIRED`](http://www.youtube.com/watch?v=lf3Kyv_iaNs) | Multiplication (*) | |
-| `GET DOWN` | Subtraction (-) | [Clip](http://www.youtube.com/watch?v=7Ox0Ehq-FRQ) |
-| `GET UP` | Addition (+) | |
-
-### End of Days
-
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| [`HE HAD TO SPLIT`](http://www.youtube.com/watch?v=9VHtuqXZQeo) | Division (/) | |
-
-### Collateral Damage
-
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| [`I LET HIM GO`](http://www.youtube.com/watch?v=ybJWKZB0Erk&feature=youtu.be&t=6m59s) | Modulo (%) | |
-
-### True Lies
-
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| [`GIVE THESE PEOPLE AIR`](http://www.youtube.com/watch?v=WANa9Oku-JM) | Non-Void Method | |
-| [`DO IT NOW`](http://www.youtube.com/watch?v=HGhP3p6lI3U) | Call Method | |
-| [`TALK TO THE HAND`](http://www.youtube.com/watch?v=dQ6m8ztEzfA) | Print | |
-| [`CHILL`](http://www.youtube.com/watch?v=R39e30FL37U) | End While | |
-| [`I WANT TO ASK YOU A BUNCH OF QUESTIONS AND I WANT TO HAVE THEM ANSWERED IMMEDIATELY`](https://www.youtube.com/watch?v=1mC9eOqsyTg) | Read Integer | |
-
----
+| Keyword | Purpose |
+|---------|---------|
+| `@I LIED` | False |
+| `@NO PROBLEMO` | True |
+| `I'LL BE BACK` | Return |
+| `HASTA LA VISTA, BABY` | End Method |
+| `I NEED YOUR CLOTHES YOUR BOOTS AND YOUR MOTORCYCLE` | Method Arguments |
+| `GET TO THE CHOPPER` | Begin Assignment |
+| `YOU SET US UP` | Set Initial Value |
 
 ### Die Hard (John McClane)
 
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| `NOW I HAVE A MACHINE GUN` | Declare Float | [Clip](https://www.youtube.com/watch?v=vD94dVu8lqQ) |
-| `HO HO HO` | Initialize Float | |
-| `WELCOME TO THE PARTY PAL` | Throw Exception | [Clip](https://www.youtube.com/watch?v=vD94dVu8lqQ) |
-| `YIPPEE KI YAY` | Success Message | [Clip](https://www.youtube.com/watch?v=OTyw6cq86kY) |
+| Keyword | Purpose |
+|---------|---------|
+| `NOW I HAVE A MACHINE GUN` | Declare Float |
+| `HO HO HO` | Initialize Float |
+| `WELCOME TO THE PARTY PAL` | Throw Exception |
 
 ### Aliens (Hudson, Hicks, Ripley)
 
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| `LET'S ROCK` | For Loop Start | [Clip](https://www.youtube.com/watch?v=dsx2vdn7gpY) |
-| `GAME OVER MAN GAME OVER` | For Loop End | [Clip](https://www.youtube.com/watch?v=dsx2vdn7gpY) |
-| `STAY FROSTY` | Debug Mode | |
+| Keyword | Purpose |
+|---------|---------|
+| `LET'S ROCK` | For Loop Start |
+| `GAME OVER MAN GAME OVER` | For Loop End |
+
+### Predator
+
+| Keyword | Purpose |
+|---------|---------|
+| `STICK AROUND` | While Loop |
+| `I AIN'T GOT TIME TO BLEED` | Declare Array |
+| `NEGATIVE` | Logical NOT |
 
 ### Lethal Weapon (Riggs & Murtaugh)
 
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| `IT'S JUST BEEN REVOKED` | Not Equal (!=) | [Clip](https://www.youtube.com/watch?v=kwC_IaY3BmY) |
-| `I'M GETTING TOO OLD FOR THIS` | Greater Than or Equal (>=) | [Clip](https://www.youtube.com/watch?v=Q37xJtuQ24w) |
+| Keyword | Purpose |
+|---------|---------|
+| `IT'S JUST BEEN REVOKED` | Not Equal (!=) |
+| `I'M GETTING TOO OLD FOR THIS` | Greater Than or Equal (>=) |
 
-### Robocop (Murphy)
+### Robocop
 
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| `DEAD OR ALIVE YOU'RE COMING WITH ME` | Bitwise OR | [Clip](https://www.youtube.com/watch?v=WVXGC896Jdw) |
-| `YOUR MOVE CREEP` | Await Input | [Clip](https://www.youtube.com/watch?v=3PbdyJ_ybSI) |
-| `FREEZE` | Debugger Breakpoint | |
+| Keyword | Purpose |
+|---------|---------|
+| `DEAD OR ALIVE YOU'RE COMING WITH ME` | Bitwise OR |
 
-### The Matrix (Neo, Morpheus)
+### The Matrix
 
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| `@THERE IS NO SPOON` | Null Value | [Clip](https://www.youtube.com/watch?v=uAXtO5dMqEI) |
-| `WHAT IF I TOLD YOU` | Switch Case | [Clip](https://www.youtube.com/watch?v=nb0YoRMXIY0) |
-| `FOLLOW THE WHITE RABBIT` | Import/Include | |
+| Keyword | Purpose |
+|---------|---------|
+| `@THERE IS NO SPOON` | Null Value |
+| `WHAT IF I TOLD YOU` | Switch Case |
 
-### Dirty Harry / Sudden Impact (Harry Callahan)
+### Dirty Harry
 
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| `GO AHEAD MAKE MY DAY` | Random() | [Clip](https://www.youtube.com/watch?v=8Xjr2hnOHiM) |
-| `DO YOU FEEL LUCKY` | Declare Boolean | [Clip](https://www.youtube.com/watch?v=8Xjr2hnOHiM) |
-| `WELL DO YA PUNK` | Initialize Boolean | |
+| Keyword | Purpose |
+|---------|---------|
+| `GO AHEAD MAKE MY DAY` | Random() |
 
-### Batman (1989) (Bruce Wayne)
+### Batman (1989)
 
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| `I'M BATMAN` | Comment (single line) | [Clip](https://www.youtube.com/watch?v=7tdpTMzYsXw) |
+| Keyword | Purpose |
+|---------|---------|
+| `I'M BATMAN` | Single-line Comment |
 
-### They Live (Nada)
+### They Live
 
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| `I HAVE COME HERE TO CHEW BUBBLEGUM` | Declare String | [Clip](https://www.youtube.com/watch?v=Du5YK5FnyF4) |
-| `AND KICK ASS` | Initialize/Concat String | [Clip](https://www.youtube.com/watch?v=Du5YK5FnyF4) |
-| `AND I'M ALL OUT OF BUBBLEGUM` | Empty String | |
+| Keyword | Purpose |
+|---------|---------|
+| `I HAVE COME HERE TO CHEW BUBBLEGUM` | Declare String |
+| `AND KICK ASS` | Initialize/Concat String |
+| `AND I'M ALL OUT OF BUBBLEGUM` | Empty String |
 
-### Cobra (Marion Cobretti)
+### Cobra
 
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| `YOU'RE THE DISEASE AND I'M THE CURE` | Less Than (<) | [Clip](https://www.youtube.com/watch?v=aRL0Xt0rzzQ) |
+| Keyword | Purpose |
+|---------|---------|
+| `YOU'RE THE DISEASE AND I'M THE CURE` | Less Than (<) |
 
 ### Judge Dredd
 
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| `I AM THE LAW` | Assert | [Clip](https://www.youtube.com/watch?v=wvJiYrRcfQo) |
-
-### Blade
-
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| `BENEATH YOU` | Less Than or Equal (<=) | [Clip](https://www.youtube.com/watch?v=tKwZB3A_T1E) |
-
-### Various / General
-
-| Keyword | Purpose | Notes |
-|---------|---------|-------|
-| `ONE MORE TIME` | Increment (++) | Inspired by action movie montages |
-| `COUNTDOWN` | Decrement (--) | Used in bomb defusal scenes |
-
-### Escape from New York (Snake Plissken)
-
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| `CALL ME SNAKE` | Lambda Function | [Clip](https://www.youtube.com/watch?v=R3zdYUG2_RA) |
-| `THE NAME'S PLISSKEN` | Function Reference | |
+| Keyword | Purpose |
+|---------|---------|
+| `I AM THE LAW` | Assert |
 
 ### The Rock
 
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| `WINNERS GO HOME AND DATE THE PROM QUEEN` | Bitwise AND | [Clip](https://www.youtube.com/watch?v=98wVFsIt-MQ) |
+| Keyword | Purpose |
+|---------|---------|
+| `WINNERS GO HOME AND DATE THE PROM QUEEN` | Bitwise AND |
 
-### Independence Day (President Whitmore, Capt. Hiller)
+### Big Trouble in Little China
 
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| `HELLO BOYS I'M BACK` | Hello World Message | [Clip](https://www.youtube.com/watch?v=NyOTaHRBTXc) |
-| `WELCOME TO EARTH` | New Instance | [Clip](https://www.youtube.com/watch?v=OfPWpEKhgfk) |
-
-### Big Trouble in Little China (Jack Burton)
-
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| `IT'S ALL IN THE REFLEXES` | Trig Functions (sin/cos/tan) | [Clip](https://www.youtube.com/watch?v=UcIH7xvd_4A) |
+| Keyword | Purpose |
+|---------|---------|
+| `IT'S ALL IN THE REFLEXES` | Trig Functions (SIN/COS/TAN) |
 
 ### Mortal Kombat
 
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| `CHOOSE YOUR DESTINY` | Switch Start | [Clip](https://www.youtube.com/watch?v=EAwWPadFsOA) |
-| `FINISH HIM` | Switch End | [Clip](https://www.youtube.com/watch?v=_hHDxlm66dE) |
+| Keyword | Purpose |
+|---------|---------|
+| `CHOOSE YOUR DESTINY` | Switch Start |
+| `FINISH HIM` | Switch End |
 
-### Speed (Jack Traven)
+### Se7en
 
-| Keyword | Purpose | Clip |
-|---------|---------|------|
-| `THE CLOCK IS TICKING` | Timer Start | |
+| Keyword | Purpose |
+|---------|---------|
+| `WHAT'S IN THE BOX` | Read File |
 
----
+### The Shining
 
-## Example: New Comparison Operators (Tier 1)
-
-```actionc
-IT'S SHOWTIME
-    I'M BATMAN This is a comment - I'M BATMAN!
-
-    HEY CHRISTMAS TREE x
-    YOU SET US UP 5
-
-    HEY CHRISTMAS TREE y
-    YOU SET US UP 10
-
-    I'M BATMAN Check if x is not equal to y
-    BECAUSE I'M GOING TO SAY PLEASE x IT'S JUST BEEN REVOKED y
-        TALK TO THE HAND "x != y is true"
-    YOU HAVE NO RESPECT FOR LOGIC
-
-    I'M BATMAN Check if x is less than y
-    BECAUSE I'M GOING TO SAY PLEASE x YOU'RE THE DISEASE AND I'M THE CURE y
-        TALK TO THE HAND "x < y is true"
-    YOU HAVE NO RESPECT FOR LOGIC
-
-    I'M BATMAN Increment x twice
-    ONE MORE TIME x
-    ONE MORE TIME x
-    TALK TO THE HAND x
-
-    I'M BATMAN Decrement y
-    COUNTDOWN y
-    TALK TO THE HAND y
-YOU HAVE BEEN TERMINATED
-```
-
-Output:
-```
-x != y is true
-x < y is true
-7
-9
-```
-
----
-
-## Example: String Variables and Concatenation (Tier 2)
-
-```actionc
-IT'S SHOWTIME
-    I'M BATMAN Declare a string variable
-    I HAVE COME HERE TO CHEW BUBBLEGUM greeting
-    AND KICK ASS "Hello, "
-
-    I'M BATMAN Another string
-    I HAVE COME HERE TO CHEW BUBBLEGUM name
-    AND KICK ASS "Arnold"
-
-    I'M BATMAN Concatenate strings using multiple AND KICK ASS
-    I HAVE COME HERE TO CHEW BUBBLEGUM message
-    AND KICK ASS greeting
-    AND KICK ASS name
-    AND KICK ASS "!"
-
-    TALK TO THE HAND message
-
-    I'M BATMAN Empty string literal
-    I HAVE COME HERE TO CHEW BUBBLEGUM empty
-    AND KICK ASS AND I'M ALL OUT OF BUBBLEGUM
-
-    I'M BATMAN Build a message with concatenation
-    I HAVE COME HERE TO CHEW BUBBLEGUM quote
-    AND KICK ASS "I'll"
-    AND KICK ASS " be"
-    AND KICK ASS " back."
-
-    TALK TO THE HAND quote
-YOU HAVE BEEN TERMINATED
-```
-
-Output:
-```
-Hello, Arnold!
-I'll be back.
-```
-
----
-
-## Example: Switch Statement (Tier 2)
-
-```actionc
-IT'S SHOWTIME
-    HEY CHRISTMAS TREE day
-    YOU SET US UP 3
-
-    CHOOSE YOUR DESTINY day
-        WHAT IF I TOLD YOU 1
-            TALK TO THE HAND "Monday"
-        WHAT IF I TOLD YOU 2
-            TALK TO THE HAND "Tuesday"
-        WHAT IF I TOLD YOU 3
-            TALK TO THE HAND "Wednesday"
-        SAME OLD SAME OLD
-            TALK TO THE HAND "Unknown day"
-    FINISH HIM
-YOU HAVE BEEN TERMINATED
-```
-
-Output:
-```
-Wednesday
-```
-
----
-
-## Example: FizzBuzz
-
-```actionc
-IT'S SHOWTIME
-    LET'S ROCK i FROM 1 TO 100
-        HEY CHRISTMAS TREE mod15
-        YOU SET US UP i
-        GET TO THE CHOPPER mod15
-        HERE IS MY INVITATION mod15
-        I LET HIM GO 15
-        ENOUGH TALK
-
-        BECAUSE I'M GOING TO SAY PLEASE mod15 YOU ARE NOT YOU YOU ARE ME 0
-            TALK TO THE HAND "FizzBuzz"
-        BULLSHIT
-            HEY CHRISTMAS TREE mod3
-            YOU SET US UP i
-            GET TO THE CHOPPER mod3
-            HERE IS MY INVITATION mod3
-            I LET HIM GO 3
-            ENOUGH TALK
-
-            BECAUSE I'M GOING TO SAY PLEASE mod3 YOU ARE NOT YOU YOU ARE ME 0
-                TALK TO THE HAND "Fizz"
-            BULLSHIT
-                HEY CHRISTMAS TREE mod5
-                YOU SET US UP i
-                GET TO THE CHOPPER mod5
-                HERE IS MY INVITATION mod5
-                I LET HIM GO 5
-                ENOUGH TALK
-
-                BECAUSE I'M GOING TO SAY PLEASE mod5 YOU ARE NOT YOU YOU ARE ME 0
-                    TALK TO THE HAND "Buzz"
-                BULLSHIT
-                    TALK TO THE HAND i
-                YOU HAVE NO RESPECT FOR LOGIC
-            YOU HAVE NO RESPECT FOR LOGIC
-        YOU HAVE NO RESPECT FOR LOGIC
-    GAME OVER MAN GAME OVER
-YOU HAVE BEEN TERMINATED
-```
-
----
-
-## Example: Arrays (NEW in ActionC)
-
-```actionc
-IT'S SHOWTIME
-    I'M BATMAN Declare an array of 5 scores
-    I AIN'T GOT TIME TO BLEED scores WITH 5 UGLY MOTHERF***ERS
-
-    I'M BATMAN Initialize first element
-    GET IN LINE scores AT 0
-    HERE IS MY INVITATION 100
-    ENOUGH TALK
-
-    I'M BATMAN Print array length
-    HEY CHRISTMAS TREE len
-    YOU SET US UP HOW MANY OF THEM scores
-    TALK TO THE HAND len
-YOU HAVE BEEN TERMINATED
-```
-
----
-
-## Example: Error Handling (NEW in ActionC)
-
-```actionc
-IT'S SHOWTIME
-    LET'S SEE WHAT YOU'VE GOT
-        HEY CHRISTMAS TREE divisor
-        YOU SET US UP 0
-
-        BECAUSE I'M GOING TO SAY PLEASE divisor YOU ARE NOT YOU YOU ARE ME 0
-            WELCOME TO THE PARTY PAL "Cannot divide by zero!"
-        YOU HAVE NO RESPECT FOR LOGIC
-    GOTCHA error
-        TALK TO THE HAND "Error caught:"
-        TALK TO THE HAND error
-    THAT'S A WRAP
-YOU HAVE BEEN TERMINATED
-```
+| Keyword | Purpose |
+|---------|---------|
+| `HONEY I'M HOME` | File Exists |
 
 ---
 
@@ -509,6 +395,7 @@ ActionC is fully backwards compatible with ArnoldC. All existing `.arnoldc` prog
 ## Documentation
 
 - **[ACTIONC_SPEC.md](ACTIONC_SPEC.md)** — Complete language specification with grammar
+- **[TODO.md](TODO.md)** — Implementation roadmap and progress
 - **[EVALUATION.md](EVALUATION.md)** — Analysis of original ArnoldC limitations
 
 ---
