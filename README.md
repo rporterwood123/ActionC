@@ -43,7 +43,10 @@ java hello
 |---------|---------|-------|
 | **Arrays** | `I AIN'T GOT TIME TO BLEED` | Predator |
 | **For Loops** | `LET'S ROCK` / `GAME OVER MAN GAME OVER` | Aliens |
+| **Break/Continue** | `GET OUT` / `KEEP MOVING` | Various |
+| **Switch/Case** | `CHOOSE YOUR DESTINY` / `FINISH HIM` | Mortal Kombat |
 | **Strings** | `I HAVE COME HERE TO CHEW BUBBLEGUM` | They Live |
+| **String Concat** | `AND KICK ASS` (chained) | They Live |
 | **Not Equal (!=)** | `IT'S JUST BEEN REVOKED` | Lethal Weapon 2 |
 | **Less Than (<)** | `YOU'RE THE DISEASE AND I'M THE CURE` | Cobra |
 | **Greater or Equal (>=)** | `I'M GETTING TOO OLD FOR THIS` | Lethal Weapon |
@@ -338,6 +341,75 @@ x != y is true
 x < y is true
 7
 9
+```
+
+---
+
+## Example: String Variables and Concatenation (Tier 2)
+
+```actionc
+IT'S SHOWTIME
+    I'M BATMAN Declare a string variable
+    I HAVE COME HERE TO CHEW BUBBLEGUM greeting
+    AND KICK ASS "Hello, "
+
+    I'M BATMAN Another string
+    I HAVE COME HERE TO CHEW BUBBLEGUM name
+    AND KICK ASS "Arnold"
+
+    I'M BATMAN Concatenate strings using multiple AND KICK ASS
+    I HAVE COME HERE TO CHEW BUBBLEGUM message
+    AND KICK ASS greeting
+    AND KICK ASS name
+    AND KICK ASS "!"
+
+    TALK TO THE HAND message
+
+    I'M BATMAN Empty string literal
+    I HAVE COME HERE TO CHEW BUBBLEGUM empty
+    AND KICK ASS AND I'M ALL OUT OF BUBBLEGUM
+
+    I'M BATMAN Build a message with concatenation
+    I HAVE COME HERE TO CHEW BUBBLEGUM quote
+    AND KICK ASS "I'll"
+    AND KICK ASS " be"
+    AND KICK ASS " back."
+
+    TALK TO THE HAND quote
+YOU HAVE BEEN TERMINATED
+```
+
+Output:
+```
+Hello, Arnold!
+I'll be back.
+```
+
+---
+
+## Example: Switch Statement (Tier 2)
+
+```actionc
+IT'S SHOWTIME
+    HEY CHRISTMAS TREE day
+    YOU SET US UP 3
+
+    CHOOSE YOUR DESTINY day
+        WHAT IF I TOLD YOU 1
+            TALK TO THE HAND "Monday"
+        WHAT IF I TOLD YOU 2
+            TALK TO THE HAND "Tuesday"
+        WHAT IF I TOLD YOU 3
+            TALK TO THE HAND "Wednesday"
+        SAME OLD SAME OLD
+            TALK TO THE HAND "Unknown day"
+    FINISH HIM
+YOU HAVE BEEN TERMINATED
+```
+
+Output:
+```
+Wednesday
 ```
 
 ---

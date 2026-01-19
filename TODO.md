@@ -8,7 +8,7 @@
 |-----------|--------|
 | Language Specification | Complete - see [ACTIONC_SPEC.md](ACTIONC_SPEC.md) |
 | Documentation | Complete - see [README.md](README.md) |
-| Compiler Implementation | **Tier 1 Complete** — 124 tests passing |
+| Compiler Implementation | **Tier 2 Complete** — 154 tests passing |
 
 The spec defines 100+ new keywords and features. This roadmap tracks implementation progress.
 
@@ -45,52 +45,54 @@ These features require minimal parser/compiler changes but significantly improve
 
 ---
 
-## Tier 2: Core Features (High Value, Medium Complexity)
+## Tier 2: Core Features (High Value, Medium Complexity) ✅ COMPLETE
 
 Major language improvements that require new AST nodes and bytecode generation.
 
-### For Loops
-- [ ] `LET'S ROCK` — For loop start
-- [ ] `FROM X TO Y` — Range specification
-- [ ] `GAME OVER MAN GAME OVER` — For loop end
+### For Loops ✅ COMPLETE
+- [x] `LET'S ROCK` — For loop start
+- [x] `FROM X TO Y` — Range specification
+- [x] `GAME OVER MAN GAME OVER` — For loop end
 
 **Implementation:**
-- Add `ForLoopNode` to AST
-- Generate counter initialization, condition check, increment, and jump bytecode
-- Handle loop variable scoping
+- Added `ForLoopNode` to AST
+- Generates counter initialization, condition check, increment, and jump bytecode
+- Supports nested loops and variable start/end values
 
-### Break/Continue
-- [ ] `GET OUT` — Break from loop
-- [ ] `KEEP MOVING` — Continue to next iteration
-
-**Implementation:**
-- Track loop context in compiler
-- Generate `GOTO` to appropriate label
-
-### Switch/Case
-- [ ] `CHOOSE YOUR DESTINY` — Switch start
-- [ ] `WHAT IF I TOLD YOU` — Case clause
-- [ ] `SAME OLD SAME OLD` — Default clause
-- [ ] `FINISH HIM` — Switch end
+### Break/Continue ✅ COMPLETE
+- [x] `GET OUT` — Break from loop
+- [x] `KEEP MOVING` — Continue to next iteration
 
 **Implementation:**
-- Add `SwitchNode`, `CaseNode` to AST
-- Generate `TABLESWITCH` or `LOOKUPSWITCH` bytecode
+- Added `LoopContext` to track current loop labels
+- `GET OUT` jumps to loop end, `KEEP MOVING` jumps to continue point
+- Works correctly in for loops (continue skips to increment) and while loops
 
-### String Variables
-- [ ] `I HAVE COME HERE TO CHEW BUBBLEGUM` — Declare string
-- [ ] `AND KICK ASS` — Initialize/assign string
-- [ ] `AND I'M ALL OUT OF BUBBLEGUM` — Empty string literal
+### Switch/Case ✅ COMPLETE
+- [x] `CHOOSE YOUR DESTINY` — Switch start
+- [x] `WHAT IF I TOLD YOU` — Case clause
+- [x] `SAME OLD SAME OLD` — Default clause
+- [x] `FINISH HIM` — Switch end
 
 **Implementation:**
-- Add string type to symbol table
-- Store as `java/lang/String` reference
-- Update `TALK TO THE HAND` to handle string variables
+- Added `SwitchNode`, `CaseClause` to AST
+- Generates `LOOKUPSWITCH` bytecode for efficient case matching
+- Supports negative case values and optional default clause
 
-### String Concatenation
-- [ ] `AND KICK ASS` — Concatenate strings
+### String Variables ✅ COMPLETE
+- [x] `I HAVE COME HERE TO CHEW BUBBLEGUM` — Declare string
+- [x] `AND KICK ASS` — Initialize/assign string
+- [x] `AND I'M ALL OUT OF BUBBLEGUM` — Empty string literal
 
-**Implementation:** Generate `StringBuilder` or `String.concat()` calls.
+**Implementation:**
+- Added type system to symbol table (VariableType: INT | STRING)
+- Store as `java/lang/String` reference using ALOAD/ASTORE
+- Updated `TALK TO THE HAND` to handle string variables
+
+### String Concatenation ✅ COMPLETE
+- [x] `AND KICK ASS` — Concatenate strings (multiple `AND KICK ASS` clauses)
+
+**Implementation:** Generates `String.concat()` calls for chained concatenation.
 
 ---
 
@@ -242,13 +244,13 @@ Advanced features for future versions.
 
 | Tier | Features | Completed | Progress |
 |------|----------|-----------|----------|
-| 1 | 8 | 0 | 0% |
-| 2 | 10 | 0 | 0% |
+| 1 | 8 | 8 | 100% |
+| 2 | 10 | 10 | 100% |
 | 3 | 14 | 0 | 0% |
 | 4 | 12 | 0 | 0% |
 | 5 | 5 | 0 | 0% |
 | 6 | 10 | 0 | 0% |
-| **Total** | **59** | **0** | **0%** |
+| **Total** | **59** | **18** | **31%** |
 
 ---
 
