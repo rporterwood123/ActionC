@@ -615,62 +615,139 @@ TALK TO THE HAND TIMES UP    I'M BATMAN print elapsed time
 
 ## 11. Object-Oriented Features
 
-*Note: These are advanced features planned for ActionC 2.0*
+ActionC supports **OOP Lite** — classes with fields and constructors, but without inheritance.
 
-### 11.1 Class Definition
+### 11.1 Class Definition ✅ IMPLEMENTED
 
 ```actionc
 MY NAME IS MAXIMUS className
-    I'M BATMAN fields
-    THAT'S CLASSIFIED privateField          I'M BATMAN private
-    OPEN TO THE PUBLIC publicField          I'M BATMAN public
+    THAT'S CLASSIFIED privateField          I'M BATMAN private int field
+    OPEN TO THE PUBLIC publicField          I'M BATMAN public int field
 
-    I'M BATMAN constructor
     IT'S ALIVE
-        I'M BATMAN constructor body
+        I'M BATMAN constructor body - initialize fields
+        GET TO THE CHOPPER publicField
+        HERE IS MY INVITATION 100
+        ENOUGH TALK
     BIRTH COMPLETE
 STRENGTH AND HONOR
 ```
 
-| Keyword | Purpose | Source |
-|---------|---------|--------|
-| `MY NAME IS MAXIMUS` | Class declaration | Gladiator (2000) |
-| `THAT'S CLASSIFIED` | Private member | Various |
-| `OPEN TO THE PUBLIC` | Public member | Various |
-| `IT'S ALIVE` | Constructor | Frankenstein reference |
-| `STRENGTH AND HONOR` | End class | Gladiator (2000) |
+| Keyword | Purpose | Source | Status |
+|---------|---------|--------|--------|
+| `MY NAME IS MAXIMUS` | Class declaration | Gladiator (2000) | ✅ |
+| `THAT'S CLASSIFIED` | Private field | Various | ✅ |
+| `OPEN TO THE PUBLIC` | Public field | Various | ✅ |
+| `IT'S ALIVE` | Constructor start | Frankenstein reference | ✅ |
+| `BIRTH COMPLETE` | Constructor end | Frankenstein reference | ✅ |
+| `STRENGTH AND HONOR` | End class | Gladiator (2000) | ✅ |
 
-### 11.2 Object Instantiation
+### 11.2 Object Instantiation ✅ IMPLEMENTED
 
 ```actionc
 WELCOME TO EARTH myObject AS MyClass
 ```
 
-| Keyword | Purpose | Source |
-|---------|---------|--------|
-| `WELCOME TO EARTH` | Create new instance | Will Smith - Independence Day |
+| Keyword | Purpose | Source | Status |
+|---------|---------|--------|--------|
+| `WELCOME TO EARTH` | Create new instance | Will Smith - Independence Day | ✅ |
+| `AS` | Type specifier | Standard | ✅ |
 
-### 11.3 Inheritance
+### 11.3 Field Access ✅ IMPLEMENTED
 
 ```actionc
-MY NAME IS MAXIMUS ChildClass LIKE FATHER LIKE SON ParentClass
-    I'M BATMAN class body
+I'M BATMAN Read field value
+TALK TO THE HAND myObject.fieldName
+
+I'M BATMAN Write to field
+GET TO THE CHOPPER myObject.fieldName
+HERE IS MY INVITATION 42
+ENOUGH TALK
+```
+
+Field access uses standard dot notation (`object.field`).
+
+### 11.4 Complete OOP Example
+
+```actionc
+MY NAME IS MAXIMUS Player
+    OPEN TO THE PUBLIC health
+    OPEN TO THE PUBLIC score
+
+    IT'S ALIVE
+        GET TO THE CHOPPER health
+        HERE IS MY INVITATION 100
+        ENOUGH TALK
+        GET TO THE CHOPPER score
+        HERE IS MY INVITATION 0
+        ENOUGH TALK
+    BIRTH COMPLETE
 STRENGTH AND HONOR
+
+IT'S SHOWTIME
+    I'M BATMAN Create two players
+    WELCOME TO EARTH hero AS Player
+    WELCOME TO EARTH villain AS Player
+
+    I'M BATMAN Update hero's score
+    GET TO THE CHOPPER hero.score
+    HERE IS MY INVITATION 500
+    ENOUGH TALK
+
+    I'M BATMAN Print values
+    TALK TO THE HAND hero.health
+    TALK TO THE HAND hero.score
+    TALK TO THE HAND villain.score
+YOU HAVE BEEN TERMINATED
 ```
 
-| Keyword | Purpose | Source |
-|---------|---------|--------|
-| `LIKE FATHER LIKE SON` | Extends/inherits | Various |
+Output:
+```
+100
+500
+0
+```
 
-### 11.4 This/Self Reference
+### 11.5 Multiple Classes
+
+Multiple class definitions can appear before the main method:
 
 ```actionc
-LOOK AT ME fieldName    I'M BATMAN this.fieldName
+MY NAME IS MAXIMUS Player
+    OPEN TO THE PUBLIC health
+STRENGTH AND HONOR
+
+MY NAME IS MAXIMUS Enemy
+    OPEN TO THE PUBLIC damage
+STRENGTH AND HONOR
+
+IT'S SHOWTIME
+    WELCOME TO EARTH hero AS Player
+    WELCOME TO EARTH monster AS Enemy
+    TALK TO THE HAND hero.health
+    TALK TO THE HAND monster.damage
+YOU HAVE BEEN TERMINATED
 ```
 
-| Keyword | Purpose | Source |
+### 11.6 Limitations (Not Implemented)
+
+The following OOP features are **not** currently supported:
+
+| Feature | Keyword | Status |
 |---------|---------|--------|
-| `LOOK AT ME` | Self reference | Various |
+| Inheritance | `LIKE FATHER LIKE SON` | Not implemented |
+| Instance Methods | — | Not implemented |
+| This Reference | `LOOK AT ME` | Not implemented |
+| Static Fields | — | Not implemented |
+| Field Types | Only INT fields | Future enhancement |
+
+### 11.7 Implementation Notes
+
+- Each class generates a separate `.class` file
+- Fields default to integer type (INT)
+- Constructors are no-argument only
+- Objects are stored as JVM references (ALOAD/ASTORE)
+- Field access uses GETFIELD/PUTFIELD bytecode
 
 ---
 
@@ -940,6 +1017,17 @@ YOU HAVE BEEN TERMINATED
 | `GATHER ROUND` | Start block comment |
 | `DISMISSED` | End block comment |
 
+#### OOP (Classes and Objects)
+| Keyword | Purpose |
+|---------|---------|
+| `MY NAME IS MAXIMUS` | Class declaration |
+| `STRENGTH AND HONOR` | End class |
+| `OPEN TO THE PUBLIC` | Public field |
+| `THAT'S CLASSIFIED` | Private field |
+| `IT'S ALIVE` | Constructor start |
+| `BIRTH COMPLETE` | Constructor end |
+| `WELCOME TO EARTH ... AS` | Create instance |
+
 #### Literals
 | Keyword | Value |
 |---------|-------|
@@ -962,6 +1050,7 @@ YOU HAVE BEEN TERMINATED
 | Die Hard | 1988 | John McClane |
 | Dirty Harry | 1971 | Harry Callahan |
 | Escape from New York | 1981 | Snake Plissken |
+| Gladiator | 2000 | Maximus |
 | Independence Day | 1996 | President Whitmore, Capt. Hiller |
 | Judge Dredd | 1995 | Judge Dredd |
 | Lethal Weapon | 1987 | Riggs, Murtaugh |

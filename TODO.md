@@ -8,7 +8,7 @@
 |-----------|--------|
 | Language Specification | Complete - see [ACTIONC_SPEC.md](ACTIONC_SPEC.md) |
 | Documentation | Complete - see [README.md](README.md) |
-| Compiler Implementation | **Tier 5 Complete** — 297 tests passing |
+| Compiler Implementation | **Tier 6 OOP Lite Complete** — 307 tests passing |
 
 The spec defines 100+ new keywords and features. This roadmap tracks implementation progress.
 
@@ -193,20 +193,39 @@ File system operations.
 
 ---
 
-## Tier 6: Future Features (Long-term Vision)
+## Tier 6: OOP Lite ✅ COMPLETE
+
+Object-oriented programming features with classes, fields, and constructors.
+
+### OOP Lite Features ✅ COMPLETE
+- [x] `MY NAME IS MAXIMUS` — Class definition (Gladiator)
+- [x] `STRENGTH AND HONOR` — End class (Gladiator)
+- [x] `IT'S ALIVE` / `BIRTH COMPLETE` — Constructor
+- [x] `WELCOME TO EARTH ... AS` — New instance (Independence Day)
+- [x] `THAT'S CLASSIFIED` — Private field
+- [x] `OPEN TO THE PUBLIC` — Public field
+- [x] Field access (`object.field`) — Read and write fields
+- [x] Multiple class support — Multiple classes per program
+
+**Implementation:**
+- Added `OBJECT(className)` to VariableType
+- Added class definition tracking to SymbolTable
+- Created ClassDefNode, FieldDeclareNode, ConstructorNode, NewInstanceNode, FieldAccessNode, FieldAssignNode
+- Multi-class bytecode generation (Map[String, Array[Byte]])
+- Updated ArnoldC and ArnoldGenerator for multiple .class file output
+
+---
+
+## Tier 7: Future Features (Long-term Vision)
 
 Advanced features for future versions. These require major architectural changes.
 
-### OOP Features
-- [ ] `MY NAME IS MAXIMUS` — Class definition (Gladiator)
-- [ ] `STRENGTH AND HONOR` — End class (Gladiator)
-- [ ] `IT'S ALIVE` — Constructor
-- [ ] `WELCOME TO EARTH` — New instance
+### OOP Advanced (Not Implemented)
 - [ ] `LIKE FATHER LIKE SON` — Inheritance
-- [ ] `THAT'S CLASSIFIED` — Private access
-- [ ] `OPEN TO THE PUBLIC` — Public access
+- [ ] Instance methods — Methods on objects
+- [ ] `LOOK AT ME` — This/self reference
 
-**Challenges:** Requires multiple class file generation, virtual dispatch tables.
+**Challenges:** Requires virtual dispatch tables, method resolution.
 
 ### Lambda Functions
 - [ ] `CALL ME SNAKE` — Lambda definition
@@ -230,9 +249,12 @@ Advanced features for future versions. These require major architectural changes
 |------|---------|
 | `src/main/scala/org/arnoldc/ArnoldParser.scala` | Parsing rules and keywords |
 | `src/main/scala/org/arnoldc/ast/*.scala` | AST node types |
-| `src/main/scala/org/arnoldc/SymbolTable.scala` | Variable tracking and types |
-| `src/main/scala/org/arnoldc/VariableType.scala` | Type system |
+| `src/main/scala/org/arnoldc/SymbolTable.scala` | Variable tracking, types, and class definitions |
+| `src/main/scala/org/arnoldc/VariableType.scala` | Type system (INT, STRING, FLOAT, INT_ARRAY, OBJECT) |
+| `src/main/scala/org/arnoldc/ClassDefinition.scala` | Class metadata (fields, constructors) |
 | `src/main/scala/org/arnoldc/Declaimer.scala` | Text-to-speech (disabled) |
+| `src/main/scala/org/arnoldc/ArnoldGenerator.scala` | Bytecode generation (single and multi-class) |
+| `src/main/scala/org/arnoldc/ArnoldC.scala` | Main compiler entry point |
 | `src/test/scala/org/arnoldc/*.scala` | Unit tests |
 
 ### Testing Strategy
@@ -257,8 +279,9 @@ Advanced features for future versions. These require major architectural changes
 | 3 | 15 | 15 | 100% |
 | 4 | 13 | 13 | 100% |
 | 5 | 4 | 4 | 100% |
-| 6 | 11 | 0 | 0% |
-| **Total** | **62** | **51** | **82%** |
+| 6 | 8 | 8 | 100% |
+| 7 | 8 | 0 | 0% |
+| **Total** | **67** | **59** | **88%** |
 
 ---
 
@@ -288,8 +311,9 @@ Advanced features for future versions. These require major architectural changes
 | FileIOTest | 12 |
 | InputTest | 1 |
 | FeatureTest | 4 |
-| **Total** | **297** |
+| OOPTest | 10 |
+| **Total** | **307** |
 
 ---
 
-*"Hasta la vista, baby."* — Implementation complete through Tier 5.
+*"My name is Maximus."* — Implementation complete through Tier 6 OOP Lite.

@@ -6,7 +6,7 @@
 
 ActionC is an esoteric programming language based on iconic one-liners from action movies. It extends the original [ArnoldC](https://github.com/lhartikk/ArnoldC) with quotes from Die Hard, Aliens, Lethal Weapon, Robocop, The Matrix, and many more classics.
 
-**297 tests passing** | **Tier 5 Complete**
+**325 tests passing** | **Tier 6 OOP Lite Complete**
 
 ---
 
@@ -30,11 +30,52 @@ YOU HAVE BEEN TERMINATED
 
 ## Quick Start
 
+### Prerequisites
+- Java 8 or higher
+- [sbt](https://www.scala-sbt.org/) (Scala Build Tool)
+
+### Build from Source
+
 ```bash
-wget http://lhartikk.github.io/ActionC.jar
-echo -e "IT'S SHOWTIME\nTALK TO THE HAND \"hello world\"\nYOU HAVE BEEN TERMINATED" > hello.actionc
-java -jar ActionC.jar hello.actionc
+# Clone the repository
+git clone https://github.com/your-repo/ActionC.git
+cd ActionC
+
+# Build the JAR
+sbt assembly
+
+# The JAR is created at target/scala-2.12/ActionC.jar
+```
+
+### Write Your First Program
+
+Create a file called `hello.actionc`:
+
+```actionc
+IT'S SHOWTIME
+    TALK TO THE HAND "HELLO BOYS I'M BACK"
+YOU HAVE BEEN TERMINATED
+```
+
+### Compile and Run
+
+```bash
+# Compile to bytecode
+java -jar target/scala-2.12/ActionC.jar hello.actionc
+
+# Run the compiled program
 java hello
+```
+
+Output:
+```
+HELLO BOYS I'M BACK
+```
+
+### Run Tests
+
+```bash
+sbt test
 ```
 
 ---
@@ -125,6 +166,16 @@ java hello
 |---------|---------|-------|
 | **Increment (++)** | `ONE MORE TIME` | Various |
 | **Decrement (--)** | `COUNTDOWN` | Various |
+
+### Object-Oriented Programming (OOP Lite)
+| Feature | Keyword | Movie |
+|---------|---------|-------|
+| **Class Definition** | `MY NAME IS MAXIMUS` / `STRENGTH AND HONOR` | Gladiator |
+| **Public Field** | `OPEN TO THE PUBLIC` | Various |
+| **Private Field** | `THAT'S CLASSIFIED` | Various |
+| **Constructor** | `IT'S ALIVE` / `BIRTH COMPLETE` | Frankenstein |
+| **Create Instance** | `WELCOME TO EARTH ... AS` | Independence Day |
+| **Field Access** | `object.field` | Standard notation |
 
 See [ACTIONC_SPEC.md](ACTIONC_SPEC.md) for the complete language specification.
 
@@ -262,6 +313,45 @@ IT'S SHOWTIME
 YOU HAVE BEEN TERMINATED
 ```
 
+### OOP - Classes and Objects
+
+```actionc
+MY NAME IS MAXIMUS Player
+    OPEN TO THE PUBLIC health
+    OPEN TO THE PUBLIC score
+
+    IT'S ALIVE
+        GET TO THE CHOPPER health
+        HERE IS MY INVITATION 100
+        ENOUGH TALK
+        GET TO THE CHOPPER score
+        HERE IS MY INVITATION 0
+        ENOUGH TALK
+    BIRTH COMPLETE
+STRENGTH AND HONOR
+
+IT'S SHOWTIME
+    I'M BATMAN Create two player instances
+    WELCOME TO EARTH p1 AS Player
+    WELCOME TO EARTH p2 AS Player
+
+    I'M BATMAN Modify p1's score
+    GET TO THE CHOPPER p1.score
+    HERE IS MY INVITATION 500
+    ENOUGH TALK
+
+    I'M BATMAN Print both players' scores
+    TALK TO THE HAND p1.score
+    TALK TO THE HAND p2.score
+YOU HAVE BEEN TERMINATED
+```
+
+Output:
+```
+500
+0
+```
+
 ---
 
 ## Keywords by Movie
@@ -384,12 +474,32 @@ YOU HAVE BEEN TERMINATED
 |---------|---------|
 | `HONEY I'M HOME` | File Exists |
 
-### Gladiator (Future OOP)
+### Gladiator (OOP)
 
 | Keyword | Purpose |
 |---------|---------|
 | `MY NAME IS MAXIMUS` | Class Definition |
 | `STRENGTH AND HONOR` | End Class |
+
+### Independence Day
+
+| Keyword | Purpose |
+|---------|---------|
+| `WELCOME TO EARTH` | Create New Instance |
+
+### Frankenstein Reference
+
+| Keyword | Purpose |
+|---------|---------|
+| `IT'S ALIVE` | Constructor Start |
+| `BIRTH COMPLETE` | Constructor End |
+
+### Various (OOP Access Modifiers)
+
+| Keyword | Purpose |
+|---------|---------|
+| `OPEN TO THE PUBLIC` | Public Field |
+| `THAT'S CLASSIFIED` | Private Field |
 
 ---
 

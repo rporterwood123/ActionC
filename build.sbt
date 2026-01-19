@@ -1,6 +1,6 @@
-name := "ArnoldC"
+name := "ActionC"
 
-version := "0.1"
+version := "1.0"
 
 scalaVersion := "2.12.18"
 
@@ -13,5 +13,5 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.17" % "test"
 Test / parallelExecution := false
 
 // Assembly settings for creating fat JAR
-assembly / assemblyJarName := "ArnoldC.jar"
+assembly / assemblyJarName := "ActionC.jar"
 assembly / mainClass := Some("org.arnoldc.ArnoldC")
