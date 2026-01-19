@@ -620,7 +620,7 @@ TALK TO THE HAND TIMES UP    I'M BATMAN print elapsed time
 ### 11.1 Class Definition
 
 ```actionc
-I'M BATMAN className
+MY NAME IS MAXIMUS className
     I'M BATMAN fields
     THAT'S CLASSIFIED privateField          I'M BATMAN private
     OPEN TO THE PUBLIC publicField          I'M BATMAN public
@@ -629,16 +629,16 @@ I'M BATMAN className
     IT'S ALIVE
         I'M BATMAN constructor body
     BIRTH COMPLETE
-BATMAN OUT
+STRENGTH AND HONOR
 ```
 
 | Keyword | Purpose | Source |
 |---------|---------|--------|
-| `I'M BATMAN` | Class declaration | Batman (1989) |
+| `MY NAME IS MAXIMUS` | Class declaration | Gladiator (2000) |
 | `THAT'S CLASSIFIED` | Private member | Various |
 | `OPEN TO THE PUBLIC` | Public member | Various |
 | `IT'S ALIVE` | Constructor | Frankenstein reference |
-| `BATMAN OUT` | End class | Batman |
+| `STRENGTH AND HONOR` | End class | Gladiator (2000) |
 
 ### 11.2 Object Instantiation
 
@@ -653,9 +653,9 @@ WELCOME TO EARTH myObject AS MyClass
 ### 11.3 Inheritance
 
 ```actionc
-I'M BATMAN ChildClass LIKE FATHER LIKE SON ParentClass
+MY NAME IS MAXIMUS ChildClass LIKE FATHER LIKE SON ParentClass
     I'M BATMAN class body
-BATMAN OUT
+STRENGTH AND HONOR
 ```
 
 | Keyword | Purpose | Source |

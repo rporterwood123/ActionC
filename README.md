@@ -384,6 +384,13 @@ YOU HAVE BEEN TERMINATED
 |---------|---------|
 | `HONEY I'M HOME` | File Exists |
 
+### Gladiator (Future OOP)
+
+| Keyword | Purpose |
+|---------|---------|
+| `MY NAME IS MAXIMUS` | Class Definition |
+| `STRENGTH AND HONOR` | End Class |
+
 ---
 
 ## Backwards Compatibility

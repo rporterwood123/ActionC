@@ -198,7 +198,8 @@ File system operations.
 Advanced features for future versions. These require major architectural changes.
 
 ### OOP Features
-- [ ] `I'M BATMAN` — Class definition (Note: conflicts with comment keyword)
+- [ ] `MY NAME IS MAXIMUS` — Class definition (Gladiator)
+- [ ] `STRENGTH AND HONOR` — End class (Gladiator)
 - [ ] `IT'S ALIVE` — Constructor
 - [ ] `WELCOME TO EARTH` — New instance
 - [ ] `LIKE FATHER LIKE SON` — Inheritance
@@ -256,8 +257,8 @@ Advanced features for future versions. These require major architectural changes
 | 3 | 15 | 15 | 100% |
 | 4 | 13 | 13 | 100% |
 | 5 | 4 | 4 | 100% |
-| 6 | 10 | 0 | 0% |
-| **Total** | **61** | **51** | **84%** |
+| 6 | 11 | 0 | 0% |
+| **Total** | **62** | **51** | **82%** |
 
 ---
 
