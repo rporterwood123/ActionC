@@ -2,17 +2,17 @@
 
 > *"I ain't got time to bleed."* — Blain, Predator (1987)
 
-**The 80s/90s Action Movie Programming Language**
+**The Action Movie Programming Language**
 
 ActionC is an esoteric programming language based on iconic one-liners from action movies. It extends the original [ArnoldC](https://github.com/lhartikk/ArnoldC) with quotes from Die Hard, Aliens, Lethal Weapon, Robocop, The Matrix, and many more classics.
 
-**325 tests passing** | **Tier 6 OOP Lite Complete**
+**378 tests passing** | **Tier 7 Complete**
 
 ---
 
 ## Motivation
 
-While ArnoldC brilliantly explored the semantics of Arnold Schwarzenegger's utterances, the true depth of 80s and 90s action cinema remained untapped. ActionC expands the vocabulary to the entire action movie universe—because sometimes you need more than one hero to save the day.
+While ArnoldC brilliantly explored the semantics of Arnold Schwarzenegger's utterances, the true depth of action cinema remained untapped. ActionC expands the vocabulary to the entire action movie universe—because sometimes you need more than one hero to save the day.
 
 **ActionC is a superset of ArnoldC** — all existing ArnoldC programs work unchanged.
 
@@ -176,6 +176,28 @@ sbt test
 | **Constructor** | `IT'S ALIVE` / `BIRTH COMPLETE` | Frankenstein |
 | **Create Instance** | `WELCOME TO EARTH ... AS` | Independence Day |
 | **Field Access** | `object.field` | Standard notation |
+
+### OOP Advanced
+| Feature | Keyword | Movie |
+|---------|---------|-------|
+| **This Reference** | `LOOK AT ME` | Predator |
+| **Inheritance** | `LIKE FATHER LIKE SON` | Various |
+| **Instance Method Start** | `COMMANDER IN CHIEF` | Various |
+| **Instance Method End** | `DISMISSED SOLDIER` | Various |
+| **Method Call** | `DO IT NOW object.method args` | Total Recall |
+
+### Lambda Functions
+| Feature | Keyword | Movie |
+|---------|---------|-------|
+| **Lambda Definition** | `CALL ME SNAKE (params) => expr` | Escape from New York |
+| **Function Reference** | `THE NAME'S PLISSKEN` | Escape from New York |
+
+### Async/Concurrency
+| Feature | Keyword | Movie |
+|---------|---------|-------|
+| **Async Block** | `COVER ME` / `MISSION COMPLETE` | Various |
+| **Await Result** | `HOLD THE LINE` | 300 |
+| **Future Access** | `task.result` | Standard notation |
 
 See [ACTIONC_SPEC.md](ACTIONC_SPEC.md) for the complete language specification.
 
@@ -352,6 +374,119 @@ Output:
 0
 ```
 
+### Inheritance and Instance Methods
+
+```actionc
+MY NAME IS MAXIMUS Vehicle
+    OPEN TO THE PUBLIC speed
+    IT'S ALIVE
+        GET TO THE CHOPPER speed
+        HERE IS MY INVITATION 0
+        ENOUGH TALK
+    BIRTH COMPLETE
+STRENGTH AND HONOR
+
+MY NAME IS MAXIMUS Car LIKE FATHER LIKE SON Vehicle
+    OPEN TO THE PUBLIC gear
+
+    COMMANDER IN CHIEF accelerate
+    I NEED YOUR CLOTHES YOUR BOOTS AND YOUR MOTORCYCLE amount
+    GIVE THESE PEOPLE AIR
+        GET TO THE CHOPPER LOOK AT ME.speed
+        HERE IS MY INVITATION LOOK AT ME.speed
+        GET UP amount
+        ENOUGH TALK
+        I'LL BE BACK LOOK AT ME.speed
+    DISMISSED SOLDIER
+STRENGTH AND HONOR
+
+IT'S SHOWTIME
+    WELCOME TO EARTH myCar AS Car
+
+    I'M BATMAN Call instance method
+    HEY CHRISTMAS TREE newSpeed
+    YOU SET US UP 0
+    GET YOUR ASS TO MARS newSpeed
+    DO IT NOW myCar.accelerate 50
+
+    TALK TO THE HAND newSpeed
+YOU HAVE BEEN TERMINATED
+```
+
+Output:
+```
+50
+```
+
+### Lambda Functions
+
+```actionc
+IT'S SHOWTIME
+    I'M BATMAN Define lambdas
+    CALL ME SNAKE double (x) => YOU'RE FIRED x 2
+    CALL ME SNAKE add (x y) => GET UP x y
+
+    I'M BATMAN Call lambda directly
+    HEY CHRISTMAS TREE result
+    YOU SET US UP 0
+    GET YOUR ASS TO MARS result
+    DO IT NOW double 21
+    TALK TO THE HAND result
+
+    I'M BATMAN Store function reference in variable
+    HEY CHRISTMAS TREE myFunc
+    YOU SET US UP THE NAME'S PLISSKEN add
+
+    I'M BATMAN Call via function reference
+    HEY CHRISTMAS TREE sum
+    YOU SET US UP 0
+    GET YOUR ASS TO MARS sum
+    DO IT NOW myFunc 10 20
+    TALK TO THE HAND sum
+YOU HAVE BEEN TERMINATED
+```
+
+Output:
+```
+42
+30
+```
+
+### Async/Concurrency
+
+```actionc
+IT'S SHOWTIME
+    I'M BATMAN Start an async task
+    COVER ME calculation
+        HEY CHRISTMAS TREE x
+        YOU SET US UP 21
+        HEY CHRISTMAS TREE result
+        YOU SET US UP 0
+        GET TO THE CHOPPER result
+        HERE IS MY INVITATION x
+        YOU'RE FIRED 2
+        ENOUGH TALK
+        I'LL BE BACK result
+    MISSION COMPLETE
+
+    TALK TO THE HAND "Task started"
+
+    I'M BATMAN Wait for the task to complete
+    HOLD THE LINE calculation
+
+    I'M BATMAN Get the result
+    HEY CHRISTMAS TREE answer
+    YOU SET US UP calculation.result
+    TALK TO THE HAND answer
+YOU HAVE BEEN TERMINATED
+```
+
+Output:
+```
+Task started
+42
+```
+
 ---
 
 ## Keywords by Movie
@@ -390,6 +525,7 @@ Output:
 | `STICK AROUND` | While Loop |
 | `I AIN'T GOT TIME TO BLEED` | Declare Array |
 | `NEGATIVE` | Logical NOT |
+| `LOOK AT ME` | This Reference |
 
 ### Lethal Weapon (Riggs & Murtaugh)
 
@@ -494,12 +630,30 @@ Output:
 | `IT'S ALIVE` | Constructor Start |
 | `BIRTH COMPLETE` | Constructor End |
 
-### Various (OOP Access Modifiers)
+### Escape from New York (Snake Plissken)
+
+| Keyword | Purpose |
+|---------|---------|
+| `CALL ME SNAKE` | Lambda Definition |
+| `THE NAME'S PLISSKEN` | Function Reference |
+
+### 300 (Leonidas)
+
+| Keyword | Purpose |
+|---------|---------|
+| `HOLD THE LINE` | Await Async Task |
+
+### Various (OOP & Async)
 
 | Keyword | Purpose |
 |---------|---------|
 | `OPEN TO THE PUBLIC` | Public Field |
 | `THAT'S CLASSIFIED` | Private Field |
+| `LIKE FATHER LIKE SON` | Inheritance |
+| `COMMANDER IN CHIEF` | Instance Method Start |
+| `DISMISSED SOLDIER` | Instance Method End |
+| `COVER ME` | Async Block Start |
+| `MISSION COMPLETE` | Async Block End |
 
 ---
 

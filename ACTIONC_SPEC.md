@@ -2,7 +2,7 @@
 
 > *"I ain't got time to bleed."* — Blain, Predator (1987)
 
-**Version 1.0** | The 80s/90s Action Movie Programming Language
+**Version 2.0** | The 80s/90s Action Movie Programming Language
 
 ---
 
@@ -14,11 +14,11 @@
 4. [Variables](#4-variables)
 5. [Operators](#5-operators)
 6. [Control Flow](#6-control-flow)
-7. [Functions](#7-functions)
+7. [Functions](#7-functions) (includes Lambdas and Async)
 8. [Error Handling](#8-error-handling)
 9. [Input/Output](#9-inputoutput)
 10. [Standard Library](#10-standard-library)
-11. [Object-Oriented Features](#11-object-oriented-features)
+11. [Object-Oriented Features](#11-object-oriented-features) (includes Inheritance and Instance Methods)
 12. [Example Programs](#12-example-programs)
 13. [Quick Reference](#13-quick-reference)
 14. [Movie Sources](#14-movie-sources)
@@ -29,7 +29,7 @@
 
 ### 1.1 What is ActionC?
 
-ActionC is an esoteric programming language that extends ArnoldC by incorporating iconic one-liners from 80s and 90s action movies. While ArnoldC uses only Arnold Schwarzenegger quotes, ActionC expands the vocabulary to include quotes from Die Hard, Lethal Weapon, Robocop, Aliens, The Matrix, and many more classic action films.
+ActionC is an esoteric programming language that extends ArnoldC by incorporating iconic one-liners from action movies. While ArnoldC uses only Arnold Schwarzenegger quotes, ActionC expands the vocabulary to include quotes from Die Hard, Lethal Weapon, Robocop, Aliens, The Matrix, and many more classic action films.
 
 ActionC compiles to Java bytecode and runs on the JVM.
 
@@ -411,36 +411,97 @@ GET YOUR ASS TO MARS result
 DO IT NOW functionName arg1
 ```
 
-### 7.4 Lambda Functions (NEW)
+### 7.4 Lambda Functions ✅ IMPLEMENTED
 
-Short anonymous functions.
+Inline function definitions that compile to static methods.
 
 ```actionc
-CALL ME SNAKE (x) => GET UP x 1
+I'M BATMAN Define a lambda that doubles a value
+CALL ME SNAKE double (x) => YOU'RE FIRED x 2
 
-I'M BATMAN Usage
+I'M BATMAN Define a lambda with two parameters
+CALL ME SNAKE add (x y) => GET UP x y
+
+I'M BATMAN Call lambda directly
 HEY CHRISTMAS TREE result
-YOU SET US UP THE NAME'S PLISSKEN addOne
-DO IT NOW addOne 5
+YOU SET US UP 0
+GET YOUR ASS TO MARS result
+DO IT NOW double 21
+TALK TO THE HAND result     I'M BATMAN prints 42
+
+I'M BATMAN Store function reference in variable
+HEY CHRISTMAS TREE myFunc
+YOU SET US UP THE NAME'S PLISSKEN add
+
+I'M BATMAN Call via function reference
+HEY CHRISTMAS TREE sum
+YOU SET US UP 0
+GET YOUR ASS TO MARS sum
+DO IT NOW myFunc 10 20
+TALK TO THE HAND sum        I'M BATMAN prints 30
 ```
 
 | Keyword | Purpose | Source |
 |---------|---------|--------|
-| `CALL ME SNAKE` | Define lambda | Snake - Escape from NY |
-| `THE NAME'S PLISSKEN` | Reference lambda | Snake - Escape from NY |
+| `CALL ME SNAKE` | Define lambda | Snake Plissken - Escape from NY |
+| `THE NAME'S PLISSKEN` | Reference lambda by name | Snake Plissken - Escape from NY |
+| `=>` | Lambda body separator | Standard |
 
-### 7.5 Async/Await (NEW - Future)
+#### Lambda Syntax
+
+```
+CALL ME SNAKE name (param1 param2 ...) => expression
+```
+
+- Parameters are space-separated in parentheses
+- Body is a single expression using arithmetic operators
+- Lambdas always return a value (non-void)
+
+### 7.5 Async/Concurrency ✅ IMPLEMENTED
+
+Async blocks run in separate threads, allowing concurrent execution.
 
 ```actionc
-COVER ME asyncOperation
-    I'M BATMAN async code
-HOLD THE LINE result
+IT'S SHOWTIME
+    I'M BATMAN Start async computation
+    COVER ME calculation
+        HEY CHRISTMAS TREE x
+        YOU SET US UP 21
+        HEY CHRISTMAS TREE result
+        YOU SET US UP 0
+        GET TO THE CHOPPER result
+        HERE IS MY INVITATION x
+        YOU'RE FIRED 2
+        ENOUGH TALK
+        I'LL BE BACK result      I'M BATMAN Return value to future
+    MISSION COMPLETE
+
+    TALK TO THE HAND "Computing..."
+
+    I'M BATMAN Wait for task to complete
+    HOLD THE LINE calculation
+
+    I'M BATMAN Access the result
+    HEY CHRISTMAS TREE answer
+    YOU SET US UP calculation.result
+    TALK TO THE HAND answer          I'M BATMAN prints 42
+YOU HAVE BEEN TERMINATED
 ```
 
 | Keyword | Purpose | Source |
 |---------|---------|--------|
-| `COVER ME` | Start async operation | Various |
-| `HOLD THE LINE` | Await result | Various |
+| `COVER ME` | Start async block | Various military |
+| `MISSION COMPLETE` | End async block | Various military |
+| `HOLD THE LINE` | Await task completion | 300 (Leonidas) |
+| `task.result` | Access async result | Standard notation |
+| `task.done` | Check if task completed | Standard notation |
+
+#### Async Implementation Details
+
+- Each async block generates a synthetic `Runnable` class
+- `I'LL BE BACK value` in async context stores to the `result` field
+- `HOLD THE LINE` spin-waits on the `done` field with `Thread.yield()`
+- Async classes have `volatile boolean done` and `int result` fields
 
 ---
 
@@ -615,7 +676,7 @@ TALK TO THE HAND TIMES UP    I'M BATMAN print elapsed time
 
 ## 11. Object-Oriented Features
 
-ActionC supports **OOP Lite** — classes with fields and constructors, but without inheritance.
+ActionC supports full OOP including classes, fields, constructors, inheritance, instance methods, and this reference.
 
 ### 11.1 Class Definition ✅ IMPLEMENTED
 
@@ -729,25 +790,126 @@ IT'S SHOWTIME
 YOU HAVE BEEN TERMINATED
 ```
 
-### 11.6 Limitations (Not Implemented)
+### 11.6 Inheritance ✅ IMPLEMENTED
 
-The following OOP features are **not** currently supported:
+Classes can extend other classes using `LIKE FATHER LIKE SON`.
 
-| Feature | Keyword | Status |
+```actionc
+MY NAME IS MAXIMUS Vehicle
+    OPEN TO THE PUBLIC speed
+    IT'S ALIVE
+        GET TO THE CHOPPER speed
+        HERE IS MY INVITATION 0
+        ENOUGH TALK
+    BIRTH COMPLETE
+STRENGTH AND HONOR
+
+MY NAME IS MAXIMUS Car LIKE FATHER LIKE SON Vehicle
+    OPEN TO THE PUBLIC gear
+
+    IT'S ALIVE
+        GET TO THE CHOPPER gear
+        HERE IS MY INVITATION 1
+        ENOUGH TALK
+    BIRTH COMPLETE
+STRENGTH AND HONOR
+
+IT'S SHOWTIME
+    WELCOME TO EARTH myCar AS Car
+    TALK TO THE HAND myCar.speed    I'M BATMAN inherited field
+    TALK TO THE HAND myCar.gear     I'M BATMAN own field
+YOU HAVE BEEN TERMINATED
+```
+
+| Keyword | Purpose | Source |
 |---------|---------|--------|
-| Inheritance | `LIKE FATHER LIKE SON` | Not implemented |
-| Instance Methods | — | Not implemented |
-| This Reference | `LOOK AT ME` | Not implemented |
-| Static Fields | — | Not implemented |
-| Field Types | Only INT fields | Future enhancement |
+| `LIKE FATHER LIKE SON` | Extend parent class | Various |
 
-### 11.7 Implementation Notes
+### 11.7 This Reference ✅ IMPLEMENTED
+
+Access the current instance using `LOOK AT ME`.
+
+```actionc
+MY NAME IS MAXIMUS Counter
+    OPEN TO THE PUBLIC value
+
+    IT'S ALIVE
+        GET TO THE CHOPPER LOOK AT ME.value
+        HERE IS MY INVITATION 100
+        ENOUGH TALK
+    BIRTH COMPLETE
+STRENGTH AND HONOR
+```
+
+| Keyword | Purpose | Source |
+|---------|---------|--------|
+| `LOOK AT ME` | This/self reference | Predator (Dutch) |
+| `LOOK AT ME.field` | Access field on this | — |
+
+### 11.8 Instance Methods ✅ IMPLEMENTED
+
+Define methods on classes that can access instance fields.
+
+```actionc
+MY NAME IS MAXIMUS Player
+    OPEN TO THE PUBLIC health
+
+    IT'S ALIVE
+        GET TO THE CHOPPER LOOK AT ME.health
+        HERE IS MY INVITATION 100
+        ENOUGH TALK
+    BIRTH COMPLETE
+
+    COMMANDER IN CHIEF takeDamage
+    I NEED YOUR CLOTHES YOUR BOOTS AND YOUR MOTORCYCLE amount
+    GIVE THESE PEOPLE AIR
+        GET TO THE CHOPPER LOOK AT ME.health
+        HERE IS MY INVITATION LOOK AT ME.health
+        GET DOWN amount
+        ENOUGH TALK
+        I'LL BE BACK LOOK AT ME.health
+    DISMISSED SOLDIER
+
+    COMMANDER IN CHIEF heal
+    I NEED YOUR CLOTHES YOUR BOOTS AND YOUR MOTORCYCLE amount
+    GIVE THESE PEOPLE AIR
+        GET TO THE CHOPPER LOOK AT ME.health
+        HERE IS MY INVITATION LOOK AT ME.health
+        GET UP amount
+        ENOUGH TALK
+        I'LL BE BACK LOOK AT ME.health
+    DISMISSED SOLDIER
+STRENGTH AND HONOR
+
+IT'S SHOWTIME
+    WELCOME TO EARTH hero AS Player
+
+    I'M BATMAN Call instance method
+    HEY CHRISTMAS TREE newHealth
+    YOU SET US UP 0
+    GET YOUR ASS TO MARS newHealth
+    DO IT NOW hero.takeDamage 25
+
+    TALK TO THE HAND newHealth    I'M BATMAN prints 75
+YOU HAVE BEEN TERMINATED
+```
+
+| Keyword | Purpose | Source |
+|---------|---------|--------|
+| `COMMANDER IN CHIEF` | Start instance method | Various military |
+| `DISMISSED SOLDIER` | End instance method | Various military |
+| `DO IT NOW obj.method args` | Call instance method | Total Recall |
+
+### 11.9 Implementation Notes
 
 - Each class generates a separate `.class` file
 - Fields default to integer type (INT)
 - Constructors are no-argument only
 - Objects are stored as JVM references (ALOAD/ASTORE)
 - Field access uses GETFIELD/PUTFIELD bytecode
+- Inheritance uses JVM's native class extension
+- Instance methods use INVOKEVIRTUAL for dispatch
+- Field resolution walks the class hierarchy for inherited fields
 
 ---
 
@@ -1027,6 +1189,26 @@ YOU HAVE BEEN TERMINATED
 | `IT'S ALIVE` | Constructor start |
 | `BIRTH COMPLETE` | Constructor end |
 | `WELCOME TO EARTH ... AS` | Create instance |
+| `LIKE FATHER LIKE SON` | Inheritance (extends) |
+| `LOOK AT ME` | This/self reference |
+| `COMMANDER IN CHIEF` | Instance method start |
+| `DISMISSED SOLDIER` | Instance method end |
+
+#### Lambda Functions
+| Keyword | Purpose |
+|---------|---------|
+| `CALL ME SNAKE` | Define lambda |
+| `THE NAME'S PLISSKEN` | Function reference |
+| `=>` | Lambda body separator |
+
+#### Async/Concurrency
+| Keyword | Purpose |
+|---------|---------|
+| `COVER ME` | Start async block |
+| `MISSION COMPLETE` | End async block |
+| `HOLD THE LINE` | Await task completion |
+| `task.result` | Access async result |
+| `task.done` | Check task completion |
 
 #### Literals
 | Keyword | Value |
@@ -1043,6 +1225,7 @@ YOU HAVE BEEN TERMINATED
 
 | Film | Year | Characters |
 |------|------|------------|
+| 300 | 2006 | King Leonidas |
 | Aliens | 1986 | Ripley, Hudson, Hicks |
 | Batman | 1989 | Batman/Bruce Wayne |
 | Big Trouble in Little China | 1986 | Jack Burton |
@@ -1094,9 +1277,29 @@ Every keyword in ActionC comes from or is inspired by iconic moments in action c
 ## Appendix B: Grammar (EBNF)
 
 ```ebnf
-program         = main_block, { method_declaration } ;
+program         = { class_definition }, main_block, { method_declaration } ;
 main_block      = "IT'S SHOWTIME", { statement }, "YOU HAVE BEEN TERMINATED" ;
 
+(* Class definitions *)
+class_definition = "MY NAME IS MAXIMUS", identifier, [ inheritance ],
+                   { field_declaration },
+                   [ constructor ],
+                   { instance_method },
+                   "STRENGTH AND HONOR" ;
+
+inheritance     = "LIKE FATHER LIKE SON", identifier ;
+
+field_declaration = ( "OPEN TO THE PUBLIC" | "THAT'S CLASSIFIED" ), identifier ;
+
+constructor     = "IT'S ALIVE", { statement }, "BIRTH COMPLETE" ;
+
+instance_method = "COMMANDER IN CHIEF", identifier,
+                  { parameter },
+                  [ "GIVE THESE PEOPLE AIR" ],
+                  { statement },
+                  "DISMISSED SOLDIER" ;
+
+(* Function declarations *)
 method_declaration = "LISTEN TO ME VERY CAREFULLY", identifier,
                      { parameter },
                      [ "GIVE THESE PEOPLE AIR" ],
@@ -1105,9 +1308,20 @@ method_declaration = "LISTEN TO ME VERY CAREFULLY", identifier,
 
 parameter       = "I NEED YOUR CLOTHES YOUR BOOTS AND YOUR MOTORCYCLE", identifier ;
 
+(* Lambda functions *)
+lambda_def      = "CALL ME SNAKE", identifier, "(", { identifier }, ")", "=>", lambda_expr ;
+lambda_expr     = arith_op_chain ;
+func_ref        = "THE NAME'S PLISSKEN", identifier ;
+
+(* Async/concurrency *)
+async_block     = "COVER ME", identifier, { statement }, "MISSION COMPLETE" ;
+await_stmt      = "HOLD THE LINE", identifier ;
+
+(* Statements *)
 statement       = declaration | assignment | print_stmt | if_stmt |
                   while_stmt | for_stmt | switch_stmt | return_stmt |
-                  method_call | try_stmt | break_stmt | continue_stmt ;
+                  method_call | try_stmt | break_stmt | continue_stmt |
+                  lambda_def | async_block | await_stmt | new_instance ;
 
 declaration     = int_decl | float_decl | string_decl | array_decl | bool_decl ;
 int_decl        = "HEY CHRISTMAS TREE", identifier, "YOU SET US UP", expression ;
@@ -1118,10 +1332,16 @@ array_decl      = "I AIN'T GOT TIME TO BLEED", identifier,
                   "WITH", integer, "UGLY MOTHERF***ERS" ;
 bool_decl       = "DO YOU FEEL LUCKY", identifier, "WELL DO YA PUNK", bool_literal ;
 
-assignment      = "GET TO THE CHOPPER", identifier,
+new_instance    = "WELCOME TO EARTH", identifier, "AS", identifier ;
+
+assignment      = "GET TO THE CHOPPER", ( identifier | field_access ),
                   "HERE IS MY INVITATION", expression,
                   { operation },
                   "ENOUGH TALK" ;
+
+field_access    = identifier, ".", identifier ;
+this_reference  = "LOOK AT ME" ;
+this_field      = "LOOK AT ME", ".", identifier ;
 
 operation       = arith_op | compare_op | logical_op | bitwise_op ;
 arith_op        = ( "GET UP" | "GET DOWN" | "YOU'RE FIRED" |
@@ -1168,11 +1388,11 @@ break_stmt      = "GET OUT" ;
 continue_stmt   = "KEEP MOVING" ;
 
 method_call     = [ "GET YOUR ASS TO MARS", identifier ],
-                  "DO IT NOW", identifier, { operand } ;
+                  "DO IT NOW", ( identifier | field_access ), { operand } ;
 
 operand         = identifier | integer | float_literal | bool_literal |
-                  string_literal | "(@NO PROBLEMO)" | "(@I LIED)" |
-                  "(@THERE IS NO SPOON)" ;
+                  string_literal | field_access | this_field | this_reference |
+                  func_ref | "(@NO PROBLEMO)" | "(@I LIED)" | "(@THERE IS NO SPOON)" ;
 
 identifier      = letter, { letter | digit | "_" } ;
 integer         = [ "-" ], digit, { digit } ;
@@ -1187,6 +1407,6 @@ block_comment   = "GATHER ROUND", { character }, "DISMISSED" ;
 
 ---
 
-*"Hasta la vista, baby."*
+*"Call me Snake."*
 
-**ActionC** — Where every line of code is a one-liner.
+**ActionC v2.0** — Where every line of code is a one-liner. Now with OOP, lambdas, and async!

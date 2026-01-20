@@ -8,7 +8,7 @@
 |-----------|--------|
 | Language Specification | Complete - see [ACTIONC_SPEC.md](ACTIONC_SPEC.md) |
 | Documentation | Complete - see [README.md](README.md) |
-| Compiler Implementation | **Tier 6 OOP Lite Complete** — 307 tests passing |
+| Compiler Implementation | **Tier 7 Complete** — 378 tests passing |
 
 The spec defines 100+ new keywords and features. This roadmap tracks implementation progress.
 
@@ -216,28 +216,47 @@ Object-oriented programming features with classes, fields, and constructors.
 
 ---
 
-## Tier 7: Future Features (Long-term Vision)
+## Tier 7: Advanced OOP, Lambdas & Async ✅ COMPLETE
 
-Advanced features for future versions. These require major architectural changes.
+Advanced features including inheritance, instance methods, lambda functions, and async/concurrency.
 
-### OOP Advanced (Not Implemented)
-- [ ] `LIKE FATHER LIKE SON` — Inheritance
-- [ ] Instance methods — Methods on objects
-- [ ] `LOOK AT ME` — This/self reference
+### OOP Advanced ✅ COMPLETE
+- [x] `LOOK AT ME` — This/self reference (Predator)
+- [x] `LIKE FATHER LIKE SON` — Inheritance
+- [x] `COMMANDER IN CHIEF` / `DISMISSED SOLDIER` — Instance method definition
+- [x] `DO IT NOW object.method args` — Instance method call
 
-**Challenges:** Requires virtual dispatch tables, method resolution.
+**Implementation:**
+- Added `ThisNode` and `ThisFieldAccessNode` for `this` reference
+- Added `parentClass` to `ClassDefNode` and `ClassDefinition`
+- Created `InstanceMethodNode` for method definitions
+- Created `InstanceMethodCallNode` for method calls
+- Uses `INVOKEVIRTUAL` for method dispatch
+- Field resolution walks class hierarchy for inherited fields
 
-### Lambda Functions
-- [ ] `CALL ME SNAKE` — Lambda definition
-- [ ] `THE NAME'S PLISSKEN` — Function reference
+### Lambda Functions ✅ COMPLETE
+- [x] `CALL ME SNAKE (params) => expr` — Lambda definition (Escape from NY)
+- [x] `THE NAME'S PLISSKEN` — Function reference (Escape from NY)
 
-**Challenges:** Requires closure capture and invokedynamic bytecode.
+**Implementation:**
+- Added `LAMBDA(name, paramCount, returnsValue)` to VariableType
+- Created `LambdaDefNode` generating synthetic static methods
+- Created `FunctionRefNode` for storing function references
+- Modified `CallMethodNode` to handle lambda calls
+- Lambdas are compiled to static methods with `INVOKESTATIC`
 
-### Async/Concurrency
-- [ ] `COVER ME` — Async operation
-- [ ] `HOLD THE LINE` — Await result
+### Async/Concurrency ✅ COMPLETE
+- [x] `COVER ME` / `MISSION COMPLETE` — Async block (Various)
+- [x] `HOLD THE LINE` — Await result (300)
+- [x] `task.result` / `task.done` — Future access
 
-**Challenges:** Requires thread management and synchronization primitives.
+**Implementation:**
+- Added `FUTURE(asyncClassName)` to VariableType
+- Created `AsyncBlockNode` generating synthetic Runnable classes
+- Created `AwaitNode` with spin-wait loop on `done` field
+- Modified `ReturnNode` to store to `result` field in async context
+- Async classes have `volatile boolean done` and `int result` fields
+- Uses `java/lang/Thread` for concurrent execution
 
 ---
 
@@ -249,13 +268,27 @@ Advanced features for future versions. These require major architectural changes
 |------|---------|
 | `src/main/scala/org/arnoldc/ArnoldParser.scala` | Parsing rules and keywords |
 | `src/main/scala/org/arnoldc/ast/*.scala` | AST node types |
-| `src/main/scala/org/arnoldc/SymbolTable.scala` | Variable tracking, types, and class definitions |
-| `src/main/scala/org/arnoldc/VariableType.scala` | Type system (INT, STRING, FLOAT, INT_ARRAY, OBJECT) |
-| `src/main/scala/org/arnoldc/ClassDefinition.scala` | Class metadata (fields, constructors) |
+| `src/main/scala/org/arnoldc/SymbolTable.scala` | Variable tracking, types, classes, lambdas, and async |
+| `src/main/scala/org/arnoldc/VariableType.scala` | Type system (INT, STRING, FLOAT, INT_ARRAY, OBJECT, LAMBDA, FUTURE) |
+| `src/main/scala/org/arnoldc/ClassDefinition.scala` | Class metadata (fields, constructors, methods) |
 | `src/main/scala/org/arnoldc/Declaimer.scala` | Text-to-speech (disabled) |
 | `src/main/scala/org/arnoldc/ArnoldGenerator.scala` | Bytecode generation (single and multi-class) |
 | `src/main/scala/org/arnoldc/ArnoldC.scala` | Main compiler entry point |
 | `src/test/scala/org/arnoldc/*.scala` | Unit tests |
+
+### New Tier 7 AST Nodes
+
+| File | Purpose |
+|------|---------|
+| `ast/ThisNode.scala` | `LOOK AT ME` - loads `this` reference |
+| `ast/ThisFieldAccessNode.scala` | `LOOK AT ME.field` - access field on this |
+| `ast/ThisFieldAssignNode.scala` | Assign to `this.field` |
+| `ast/InstanceMethodNode.scala` | Instance method definition |
+| `ast/InstanceMethodCallNode.scala` | `DO IT NOW obj.method args` |
+| `ast/LambdaDefNode.scala` | Lambda function definition |
+| `ast/FunctionRefNode.scala` | `THE NAME'S PLISSKEN` - function reference |
+| `ast/AsyncBlockNode.scala` | `COVER ME` - async block with Runnable generation |
+| `ast/AwaitNode.scala` | `HOLD THE LINE` - await async completion |
 
 ### Testing Strategy
 1. Add parser tests for new syntax
@@ -280,8 +313,8 @@ Advanced features for future versions. These require major architectural changes
 | 4 | 13 | 13 | 100% |
 | 5 | 4 | 4 | 100% |
 | 6 | 8 | 8 | 100% |
-| 7 | 8 | 0 | 0% |
-| **Total** | **67** | **59** | **88%** |
+| 7 | 8 | 8 | 100% |
+| **Total** | **67** | **67** | **100%** |
 
 ---
 
@@ -311,9 +344,14 @@ Advanced features for future versions. These require major architectural changes
 | FileIOTest | 12 |
 | InputTest | 1 |
 | FeatureTest | 4 |
-| OOPTest | 10 |
-| **Total** | **307** |
+| OOPTest | 28 |
+| ThisReferenceTest | 5 |
+| InheritanceTest | 12 |
+| InstanceMethodTest | 14 |
+| LambdaTest | 11 |
+| AsyncTest | 11 |
+| **Total** | **378** |
 
 ---
 
-*"My name is Maximus."* — Implementation complete through Tier 6 OOP Lite.
+*"Call me Snake."* — Implementation complete through Tier 7.
