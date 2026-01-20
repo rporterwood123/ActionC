@@ -38,7 +38,7 @@ YOU HAVE BEEN TERMINATED
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-repo/ActionC.git
+git clone https://github.com/rporterwood123/ActionC.git
 cd ActionC
 
 # Build the JAR
