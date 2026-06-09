@@ -8,6 +8,17 @@ import org.parboiled.errors.ParsingException
 
 case class ReturnNode(operand: Option[OperandNode]) extends StatementNode {
   def generate(mv: MethodVisitor, symbolTable: SymbolTable) {
+    // Inside an async block's run() method, a return stores its value into the
+    // synthetic future's `result` field instead of returning from the method.
+    symbolTable.asyncResultClass match {
+      case Some(asyncClass) =>
+        mv.visitVarInsn(ALOAD, 0)
+        operand.getOrElse(throw new ParsingException("ASYNC BLOCK MUST RETURN A VALUE"))
+          .generate(mv, symbolTable)
+        mv.visitFieldInsn(PUTFIELD, asyncClass, "result", "I")
+        return
+      case None =>
+    }
     if (operand.isEmpty) {
       if (symbolTable.getCurrentMethod().returnsValue) {
         throw new ParsingException("NON VOID METHOD: " + symbolTable.currentMethod + " MUST RETURN AN ARGUMENT")

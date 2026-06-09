@@ -22,6 +22,24 @@ case class SymbolTable(upperLevel: Option[SymbolTable], currentMethod: String) {
   // any. When set, `this` is at local slot 0 and bare names may resolve to fields.
   var currentClass: Option[String] = None
 
+  // When generating an async block's run() method, the synthetic class name whose
+  // `result` field a return (I'LL BE BACK) should store into.
+  var asyncResultClass: Option[String] = None
+
+  // Synthetic classes (e.g. async Runnables) produced as a side effect of code
+  // generation, collected on the root table and emitted as extra .class files.
+  private val syntheticClasses = new mutable.HashMap[String, Array[Byte]]()
+
+  def addSyntheticClass(name: String, bytecode: Array[Byte]): Unit = upperLevel match {
+    case Some(parent) => parent.addSyntheticClass(name, bytecode)
+    case None => syntheticClasses.put(name, bytecode)
+  }
+
+  def collectSyntheticClasses(): Map[String, Array[Byte]] = upperLevel match {
+    case Some(parent) => parent.collectSyntheticClasses()
+    case None => syntheticClasses.toMap
+  }
+
   // Function references: a variable bound to a (statically-known) lambda/function
   // name via THE NAME'S PLISSKEN. Calls on the variable resolve to that function.
   private val functionRefs = new mutable.HashMap[String, String]()

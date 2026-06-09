@@ -14,7 +14,9 @@ case class RootNode(classes: List[ClassDefNode], methods: List[AbstractMethodNod
 
     val mainClass = Map(filename -> generateClass(filename, globalSymbols).toByteArray)
     val classFiles = classes.map(c => c.className -> c.generateClass(globalSymbols)).toMap
-    mainClass ++ classFiles
+    // Synthetic classes (e.g. async Runnables) are produced as a side effect of
+    // generating method bodies, so collect them last.
+    mainClass ++ classFiles ++ globalSymbols.collectSyntheticClasses()
   }
 
   def generate(mv: MethodVisitor, symbolTable: SymbolTable) {

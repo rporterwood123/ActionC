@@ -48,6 +48,9 @@ class ArnoldParser extends Parser {
   val Modulo = "I LET HIM GO"
   val LambdaDef = "CALL ME SNAKE"
   val FunctionRef = "THE NAME'S PLISSKEN"
+  val AsyncStart = "COVER ME"
+  val AsyncEnd = "MISSION COMPLETE"
+  val Await = "HOLD THE LINE"
   val BitwiseAnd = "WINNERS GO HOME AND DATE THE PROM QUEEN"
   val BitwiseOr = "DEAD OR ALIVE YOU'RE COMING WITH ME"
   val BitwiseXor = "FRIEND OR FOE"
@@ -205,7 +208,17 @@ class ArnoldParser extends Parser {
       StringDeclareStatement | FloatDeclareStatement |
       ArrayDeclareStatement | ArrayAssignStatement |
       TryStatement | ThrowStatement | AssertStatement | SleepStatement |
-      WriteFileStatement | DeleteFileStatement
+      WriteFileStatement | DeleteFileStatement |
+      AsyncBlockStatement | AwaitStatement
+  }
+
+  def AsyncBlockStatement: Rule1[StatementNode] = rule {
+    AsyncStart ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~
+      zeroOrMore(Statement) ~ AsyncEnd ~ EOL ~~> AsyncBlockNode
+  }
+
+  def AwaitStatement: Rule1[StatementNode] = rule {
+    Await ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~~> AwaitNode
   }
 
   def WriteFileStatement: Rule1[StatementNode] = rule {
