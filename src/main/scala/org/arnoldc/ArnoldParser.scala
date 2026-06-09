@@ -25,9 +25,14 @@ class ArnoldParser extends Parser {
   val False = "I LIED"
   val True = "NO PROBLEMO"
   val EqualTo = "YOU ARE NOT YOU YOU ARE ME"
+  val NotEqual = "IT'S JUST BEEN REVOKED"
   val GreaterThan = "LET OFF SOME STEAM BENNET"
+  val LessThan = "YOU'RE THE DISEASE AND I'M THE CURE"
+  val GreaterOrEqual = "I'M GETTING TOO OLD FOR THIS"
+  val LessOrEqual = "BENEATH YOU"
   val Or = "CONSIDER THAT A DIVORCE"
   val And = "KNOCK KNOCK"
+  val Not = "NEGATIVE"
   val If = "BECAUSE I'M GOING TO SAY PLEASE"
   val Else = "BULLSHIT"
   val EndIf = "YOU HAVE NO RESPECT FOR LOGIC"
@@ -41,16 +46,144 @@ class ArnoldParser extends Parser {
   val NonVoidMethod = "GIVE THESE PEOPLE AIR"
   val AssignVariableFromMethodCall = "GET YOUR ASS TO MARS"
   val Modulo = "I LET HIM GO"
+  val LambdaDef = "CALL ME SNAKE"
+  val FunctionRef = "THE NAME'S PLISSKEN"
+  val AsyncStart = "COVER ME"
+  val AsyncEnd = "MISSION COMPLETE"
+  val Await = "HOLD THE LINE"
+  val BitwiseAnd = "WINNERS GO HOME AND DATE THE PROM QUEEN"
+  val BitwiseOr = "DEAD OR ALIVE YOU'RE COMING WITH ME"
+  val BitwiseXor = "FRIEND OR FOE"
+  val LeftShift = "MOVE IT"
+  val RightShift = "FALL BACK"
+  val ClassStart = "MY NAME IS MAXIMUS"
+  val ClassEnd = "STRENGTH AND HONOR"
+  val Inherits = "LIKE FATHER LIKE SON"
+  val PublicField = "OPEN TO THE PUBLIC"
+  val PrivateField = "THAT'S CLASSIFIED"
+  val ConstructorStart = "IT'S ALIVE"
+  val ConstructorEnd = "BIRTH COMPLETE"
+  val NewInstance = "WELCOME TO EARTH"
+  val As = "AS"
+  val This = "LOOK AT ME"
+  val InstanceMethodStart = "COMMANDER IN CHIEF"
+  val InstanceMethodEnd = "DISMISSED SOLDIER"
+  val Increment = "ONE MORE TIME"
+  val Decrement = "COUNTDOWN"
+  val ForStart = "LET'S ROCK"
+  val ForFrom = "FROM"
+  val ForTo = "TO"
+  val ForEnd = "GAME OVER MAN GAME OVER"
+  val Break = "GET OUT"
+  val Continue = "KEEP MOVING"
+  val SwitchStart = "CHOOSE YOUR DESTINY"
+  val SwitchCase = "WHAT IF I TOLD YOU"
+  val SwitchDefault = "SAME OLD SAME OLD"
+  val SwitchEnd = "FINISH HIM"
+  val MathAbs = "NO MORE HALF MEASURES"
+  val MathSqrt = "GET TO THE ROOT OF"
+  val MathMax = "MAXIMUM EFFORT OF"
+  val MathMin = "MINIMAL CASUALTIES OF"
+  val MathPow = "UNLIMITED POWER OF"
+  val MathRandom = "GO AHEAD MAKE MY DAY"
+  val TimeNow = "WHAT TIME IS IT"
+  val Sleep = "CHILL OUT FOR"
+  val FileRead = "WHAT'S IN THE BOX"
+  val FileWrite = "WRITE THAT DOWN"
+  val FileWriteTo = "TO"
+  val FileExists = "HONEY I'M HOME"
+  val FileDelete = "SEAL THE EXITS"
+  val Assert = "I AM THE LAW"
+  val TryStart = "LET'S SEE WHAT YOU'VE GOT"
+  val Throw = "WELCOME TO THE PARTY PAL"
+  val Catch = "GOTCHA"
+  val Finally = "CLEAN UP ON AISLE FIVE"
+  val TryEnd = "THAT'S A WRAP"
+  val DeclareArray = "I AIN'T GOT TIME TO BLEED"
+  val ArraySize = "UGLY MOTHERFUCKERS"
+  val ArrayWith = "WITH"
+  val ArrayAccess = "GET IN LINE"
+  val ArrayAt = "AT"
+  val ArrayLength = "HOW MANY OF THEM"
+  val DeclareFloat = "NOW I HAVE A MACHINE GUN"
+  val InitFloat = "HO HO HO"
+  val DeclareString = "I HAVE COME HERE TO CHEW BUBBLEGUM"
+  val StringAssign = "AND KICK ASS"
+  val EmptyString = "AND I'M ALL OUT OF BUBBLEGUM"
+  val StrUpper = "SAY IT LOUDER"
+  val StrLower = "KEEP YOUR VOICE DOWN"
+  val StrTrim = "CUT THE FAT FROM"
+  val StrSubstring = "GIVE ME A PIECE OF"
+  val StrSubFrom = "FROM"
+  val StrSubTo = "TO"
+  val StrLength = "HOW LONG IS THIS THING"
+  val StrContains = "YOU TALKING TO ME ABOUT"
+  val StrIndexOf = "WHERE IS IT IN"
 
-  val EOL = zeroOrMore("\t" | "\r" | " ") ~ "\n" ~ zeroOrMore("\t" | "\r" | " " | "\n")
+  val SingleLineComment = "I'M BATMAN"
+  val BlockCommentStart = "GATHER ROUND"
+  val BlockCommentEnd = "DISMISSED"
+
+  // A single-line comment runs to (but not including) the end of the line.
+  def LineComment: Rule0 = rule { SingleLineComment ~ zeroOrMore(!anyOf("\n") ~ ANY) }
+  // A block comment spans everything between the start and end markers.
+  def BlockComment: Rule0 = rule { BlockCommentStart ~ zeroOrMore(!BlockCommentEnd ~ ANY) ~ BlockCommentEnd }
+
+  val EOL = rule {
+    zeroOrMore("\t" | "\r" | " ") ~ optional(BlockComment | LineComment) ~ "\n" ~
+      zeroOrMore("\t" | "\r" | " " | "\n" | BlockComment | LineComment)
+  }
   val WhiteSpace = oneOrMore(" " | "\t")
 
   def Root: Rule1[RootNode] = rule {
-    oneOrMore(AbstractMethod) ~ EOI ~~> RootNode
+    optional(EOL) ~ zeroOrMore(ClassDefinition) ~ oneOrMore(AbstractMethod) ~ EOI ~~> RootNode
+  }
+
+  def ClassDefinition: Rule1[ClassDefNode] = rule {
+    ClassStart ~ WhiteSpace ~ VariableName ~> (v => v) ~
+      optional(WhiteSpace ~ Inherits ~ WhiteSpace ~ VariableName ~> (v => v)) ~ EOL ~
+      zeroOrMore(FieldDeclaration) ~
+      optional(ConstructorDefinition) ~
+      zeroOrMore(InstanceMethodDefinition) ~
+      ClassEnd ~ optional(EOL) ~~> ClassDefNode
+  }
+
+  def FieldDeclaration: Rule1[FieldNode] = rule {
+    PublicField ~ WhiteSpace ~ VariableName ~> (v => FieldNode(v, true)) ~ EOL |
+      PrivateField ~ WhiteSpace ~ VariableName ~> (v => FieldNode(v, false)) ~ EOL
+  }
+
+  def ConstructorDefinition: Rule1[List[StatementNode]] = rule {
+    ConstructorStart ~ EOL ~ zeroOrMore(Statement) ~ ConstructorEnd ~ EOL
+  }
+
+  def InstanceMethodDefinition: Rule1[InstanceMethodNode] = rule {
+    InstanceMethodStart ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~
+      zeroOrMore(MethodArguments ~ WhiteSpace ~ Variable ~ EOL) ~
+      (NonVoidMethod | "") ~> ((m: String) => m == NonVoidMethod) ~ optional(EOL) ~
+      zeroOrMore(Statement) ~ InstanceMethodEnd ~ EOL ~~> InstanceMethodNode
   }
 
   def AbstractMethod: Rule1[AbstractMethodNode] = rule {
-    (MainMethod | Method) ~ optional(EOL)
+    (MainMethod | Method | LambdaDefinition) ~ optional(EOL)
+  }
+
+  def LambdaDefinition: Rule1[AbstractMethodNode] = rule {
+    LambdaDef ~ WhiteSpace ~ VariableName ~> (v => v) ~ WhiteSpace ~
+      LambdaParams ~ WhiteSpace ~ "=>" ~ WhiteSpace ~ LambdaBody ~ EOL ~~> LambdaMethodNode
+  }
+
+  def LambdaParams: Rule1[List[VariableNode]] = rule {
+    "(" ~ zeroOrMore(optional(WhiteSpace) ~ Variable) ~ optional(WhiteSpace) ~ ")"
+  }
+
+  def LambdaBody: Rule1[AstNode] = rule {
+    Operand ~ WhiteSpace ~ PlusOperator ~ WhiteSpace ~ Operand ~~> PlusExpressionNode |
+      Operand ~ WhiteSpace ~ MinusOperator ~ WhiteSpace ~ Operand ~~> MinusExpressionNode |
+      Operand ~ WhiteSpace ~ MultiplicationOperator ~ WhiteSpace ~ Operand ~~> MultiplicationExpressionNode |
+      Operand ~ WhiteSpace ~ DivisionOperator ~ WhiteSpace ~ Operand ~~> DivisionExpressionNode |
+      Operand ~ WhiteSpace ~ Modulo ~ WhiteSpace ~ Operand ~~> ModuloExpressionNode |
+      Operand
   }
 
   def MainMethod: Rule1[AbstractMethodNode] = rule {
@@ -66,8 +199,152 @@ class ArnoldParser extends Parser {
 
   def Statement: Rule1[StatementNode] = rule {
     DeclareIntStatement | PrintStatement |
+      NewInstanceStatement | ThisFieldAssignStatement | FieldAssignStatement |
+      InstanceMethodCallStatement |
       AssignVariableStatement | ConditionStatement |
-      WhileStatement | CallMethodStatement | ReturnStatement | CallReadMethodStatement
+      WhileStatement | CallMethodStatement | ReturnStatement | CallReadMethodStatement |
+      IncrementStatement | DecrementStatement | ForLoopStatement |
+      BreakStatement | ContinueStatement | SwitchStatement |
+      StringDeclareStatement | FloatDeclareStatement |
+      ArrayDeclareStatement | ArrayAssignStatement |
+      TryStatement | ThrowStatement | AssertStatement | SleepStatement |
+      WriteFileStatement | DeleteFileStatement |
+      AsyncBlockStatement | AwaitStatement
+  }
+
+  def AsyncBlockStatement: Rule1[StatementNode] = rule {
+    AsyncStart ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~
+      zeroOrMore(Statement) ~ AsyncEnd ~ EOL ~~> AsyncBlockNode
+  }
+
+  def AwaitStatement: Rule1[StatementNode] = rule {
+    Await ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~~> AwaitNode
+  }
+
+  def WriteFileStatement: Rule1[StatementNode] = rule {
+    FileWrite ~ WhiteSpace ~ StringOperand ~ WhiteSpace ~ FileWriteTo ~ WhiteSpace ~ StringOperand ~ EOL ~~> WriteFileNode
+  }
+
+  def DeleteFileStatement: Rule1[StatementNode] = rule {
+    FileDelete ~ WhiteSpace ~ StringOperand ~ EOL ~~> DeleteFileNode
+  }
+
+  def SleepStatement: Rule1[StatementNode] = rule {
+    Sleep ~ WhiteSpace ~ Operand ~ EOL ~~> SleepNode
+  }
+
+  def AssertStatement: Rule1[StatementNode] = rule {
+    Assert ~ WhiteSpace ~ Operand ~ optional(WhiteSpace ~ "\"" ~ String ~ "\"") ~ EOL ~~> AssertNode
+  }
+
+  def TryStatement: Rule1[StatementNode] = rule {
+    TryStart ~ EOL ~ zeroOrMore(Statement) ~
+      Catch ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~ zeroOrMore(Statement) ~
+      optional(Finally ~ EOL ~ zeroOrMore(Statement)) ~
+      TryEnd ~ EOL ~~> TryNode
+  }
+
+  def ThrowStatement: Rule1[StatementNode] = rule {
+    Throw ~ WhiteSpace ~ StringOperand ~ EOL ~~> ThrowNode
+  }
+
+  def ArrayDeclareStatement: Rule1[StatementNode] = rule {
+    DeclareArray ~ WhiteSpace ~ VariableName ~> (v => v) ~ WhiteSpace ~
+      ArrayWith ~ WhiteSpace ~ Operand ~ WhiteSpace ~ ArraySize ~ EOL ~~> ArrayDeclareNode
+  }
+
+  def ArrayAssignStatement: Rule1[StatementNode] = rule {
+    ArrayAccess ~ WhiteSpace ~ VariableName ~> (v => v) ~ WhiteSpace ~
+      ArrayAt ~ WhiteSpace ~ Operand ~ EOL ~
+      Expression ~ EndAssignVariable ~ EOL ~~> ArrayAssignNode
+  }
+
+  def FloatDeclareStatement: Rule1[StatementNode] = rule {
+    DeclareFloat ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~
+      InitFloat ~ WhiteSpace ~ FloatLiteral ~ EOL ~~> FloatDeclareNode
+  }
+
+  def FloatLiteral: Rule1[FloatNode] = rule {
+    group(optional("-") ~ oneOrMore("0" - "9") ~ "." ~ oneOrMore("0" - "9")) ~> (s => FloatNode(s.toFloat))
+  }
+
+  def StringDeclareStatement: Rule1[StatementNode] = rule {
+    DeclareString ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~
+      oneOrMore(StringAssign ~ WhiteSpace ~ StringOperand ~ EOL) ~~> StringDeclareNode
+  }
+
+  def StringOperand: Rule1[OperandNode] = rule {
+    StringFunction |
+      (FileRead ~ WhiteSpace ~ StringOperand ~~> ReadFileNode) |
+      "\"" ~ String ~ "\"" |
+      EmptyString ~ push(StringNode("")) |
+      Variable
+  }
+
+  def StringFunction: Rule1[OperandNode] = rule {
+    StrUpper ~ WhiteSpace ~ StringOperand ~~> UpperNode |
+      StrLower ~ WhiteSpace ~ StringOperand ~~> LowerNode |
+      StrTrim ~ WhiteSpace ~ StringOperand ~~> TrimNode |
+      StrSubstring ~ WhiteSpace ~ StringOperand ~ WhiteSpace ~
+        StrSubFrom ~ WhiteSpace ~ Operand ~ WhiteSpace ~ StrSubTo ~ WhiteSpace ~ Operand ~~> SubstringNode
+  }
+
+  def SwitchStatement: Rule1[StatementNode] = rule {
+    SwitchStart ~ WhiteSpace ~ Operand ~ EOL ~
+      zeroOrMore(CaseClauseRule) ~
+      optional(DefaultClauseRule) ~
+      SwitchEnd ~ EOL ~~> SwitchNode
+  }
+
+  def CaseClauseRule: Rule1[CaseClause] = rule {
+    SwitchCase ~ WhiteSpace ~ Number ~ EOL ~ zeroOrMore(Statement) ~~> CaseClause
+  }
+
+  def DefaultClauseRule: Rule1[List[StatementNode]] = rule {
+    SwitchDefault ~ EOL ~ zeroOrMore(Statement) ~~> (stmts => stmts)
+  }
+
+  def BreakStatement: Rule1[StatementNode] = rule {
+    Break ~ EOL ~ push(BreakNode())
+  }
+
+  def ContinueStatement: Rule1[StatementNode] = rule {
+    Continue ~ EOL ~ push(ContinueNode())
+  }
+
+  def ForLoopStatement: Rule1[StatementNode] = rule {
+    ForStart ~ WhiteSpace ~ VariableName ~> (v => v) ~ WhiteSpace ~
+      ForFrom ~ WhiteSpace ~ Operand ~ WhiteSpace ~
+      ForTo ~ WhiteSpace ~ Operand ~ EOL ~
+      zeroOrMore(Statement) ~ ForEnd ~ EOL ~~> ForLoopNode
+  }
+
+  def IncrementStatement: Rule1[StatementNode] = rule {
+    Increment ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~~> IncrementNode
+  }
+
+  def DecrementStatement: Rule1[StatementNode] = rule {
+    Decrement ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~~> DecrementNode
+  }
+
+  def NewInstanceStatement: Rule1[StatementNode] = rule {
+    NewInstance ~ WhiteSpace ~ VariableName ~> (v => v) ~ WhiteSpace ~ As ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~~> NewInstanceNode
+  }
+
+  def ThisFieldAssignStatement: Rule1[StatementNode] = rule {
+    AssignVariable ~ WhiteSpace ~ This ~ "." ~ VariableName ~> (v => v) ~ EOL ~
+      Expression ~ EndAssignVariable ~ EOL ~~> ThisFieldAssignNode
+  }
+
+  def FieldAssignStatement: Rule1[StatementNode] = rule {
+    AssignVariable ~ WhiteSpace ~ VariableName ~> (v => v) ~ "." ~ VariableName ~> (v => v) ~ EOL ~
+      Expression ~ EndAssignVariable ~ EOL ~~> FieldAssignNode
+  }
+
+  def InstanceMethodCallStatement: Rule1[StatementNode] = rule {
+    (AssignVariableFromMethodCall ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL | "" ~> (v => v)) ~
+      CallMethod ~ WhiteSpace ~ VariableName ~> (v => v) ~ "." ~ VariableName ~> (v => v) ~
+      zeroOrMore(WhiteSpace ~ Operand) ~ EOL ~~> InstanceMethodCallNode
   }
 
   def CallMethodStatement: Rule1[StatementNode] = rule {
@@ -109,19 +386,70 @@ class ArnoldParser extends Parser {
   }
 
   def Operand: Rule1[OperandNode] = rule {
-    Number | Variable | Boolean
+    Number | ArrayAccessOperand | ArrayLengthOperand | MathOperand | StringIntFunction |
+      (TimeNow ~ push(TimeNode())) | (FileExists ~ WhiteSpace ~ StringOperand ~~> FileExistsNode) |
+      ThisFieldAccessOperand | FieldAccessOperand |
+      (FunctionRef ~ WhiteSpace ~ VariableName ~> (v => v) ~~> FunctionRefNode) |
+      Variable | Boolean
+  }
+
+  def ThisFieldAccessOperand: Rule1[OperandNode] = rule {
+    This ~ "." ~ VariableName ~> (v => v) ~~> ThisFieldAccessNode
+  }
+
+  def FieldAccessOperand: Rule1[OperandNode] = rule {
+    VariableName ~> (v => v) ~ "." ~ VariableName ~> (v => v) ~~> FieldAccessNode
+  }
+
+  def StringIntFunction: Rule1[OperandNode] = rule {
+    StrLength ~ WhiteSpace ~ StringOperand ~~> LengthNode |
+      StrContains ~ WhiteSpace ~ StringOperand ~ WhiteSpace ~ StringOperand ~~> ContainsNode |
+      StrIndexOf ~ WhiteSpace ~ StringOperand ~ WhiteSpace ~ StringOperand ~~> IndexOfNode
+  }
+
+  def MathOperand: Rule1[OperandNode] = rule {
+    MathAbs ~ WhiteSpace ~ Operand ~~> AbsNode |
+      MathSqrt ~ WhiteSpace ~ Operand ~~> SqrtNode |
+      MathMax ~ WhiteSpace ~ Operand ~ WhiteSpace ~ Operand ~~> MaxNode |
+      MathMin ~ WhiteSpace ~ Operand ~ WhiteSpace ~ Operand ~~> MinNode |
+      MathPow ~ WhiteSpace ~ Operand ~ WhiteSpace ~ Operand ~~> PowNode |
+      MathRandom ~ WhiteSpace ~ Operand ~~> RandomNode
+  }
+
+  def ArrayAccessOperand: Rule1[OperandNode] = rule {
+    ArrayAccess ~ WhiteSpace ~ VariableName ~> (v => v) ~ WhiteSpace ~ ArrayAt ~ WhiteSpace ~ Operand ~~> ArrayAccessNode
+  }
+
+  def ArrayLengthOperand: Rule1[OperandNode] = rule {
+    ArrayLength ~ WhiteSpace ~ VariableName ~> (v => v) ~~> ArrayLengthNode
   }
 
   def Expression: Rule1[AstNode] = rule {
     SetValueExpression ~
-      (zeroOrMore(ArithmeticOperation | LogicalOperation))
+      (zeroOrMore(ArithmeticOperation | LogicalOperation | BitwiseOperation | UnaryOperation))
+  }
+
+  def BitwiseOperation: ReductionRule1[AstNode, AstNode] = rule {
+    BitwiseAnd ~ WhiteSpace ~ Operand ~ EOL ~~> BitwiseAndNode |
+      BitwiseOr ~ WhiteSpace ~ Operand ~ EOL ~~> BitwiseOrNode |
+      BitwiseXor ~ WhiteSpace ~ Operand ~ EOL ~~> BitwiseXorNode |
+      LeftShift ~ WhiteSpace ~ Operand ~ EOL ~~> LeftShiftNode |
+      RightShift ~ WhiteSpace ~ Operand ~ EOL ~~> RightShiftNode
+  }
+
+  def UnaryOperation: ReductionRule1[AstNode, AstNode] = rule {
+    Not ~ EOL ~~> NotNode
   }
 
   def LogicalOperation: ReductionRule1[AstNode, AstNode] = rule {
     Or ~ WhiteSpace ~ Operand ~ EOL ~~> OrNode |
       And ~ WhiteSpace ~ Operand ~ EOL ~~> AndNode |
       EqualTo ~ WhiteSpace ~ Operand ~ EOL ~~> EqualToNode |
-      GreaterThan ~ WhiteSpace ~ Operand ~ EOL ~~> GreaterThanNode
+      NotEqual ~ WhiteSpace ~ Operand ~ EOL ~~> NotEqualNode |
+      GreaterThan ~ WhiteSpace ~ Operand ~ EOL ~~> GreaterThanNode |
+      LessThan ~ WhiteSpace ~ Operand ~ EOL ~~> LessThanNode |
+      GreaterOrEqual ~ WhiteSpace ~ Operand ~ EOL ~~> GreaterOrEqualNode |
+      LessOrEqual ~ WhiteSpace ~ Operand ~ EOL ~~> LessOrEqualNode
 
   }
 

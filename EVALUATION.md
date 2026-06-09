@@ -136,22 +136,27 @@ The language is essentially a minimal procedural language with only integers, ba
 
 ## ActionC Improvements
 
-**ActionC** addresses many of these limitations:
+**ActionC addresses** these limitations — and as of 2026-06-09 the improvements
+below are **implemented and tested** (175 passing tests; verified end-to-end through
+the compiled `ActionC.jar`).
 
-| Category | ArnoldC | ActionC |
-|----------|---------|---------|
-| Arrays/Collections | Not supported | ✅ Integer arrays |
-| Floating-point math | Not supported | ✅ Float type |
-| String manipulation | Not supported | ✅ String type + functions |
-| File I/O | Not supported | ✅ Read/write/delete/exists |
-| OOP | Not supported | ✅ Classes, fields, constructors |
-| Error handling | Not supported | ✅ Try/catch/throw |
-| Standard library | None | ✅ Math, string, time functions |
-| Comparison operators | Only `==` and `>` | ✅ All operators (!=, <, >=, <=) |
-| Loop control | No break/continue | ✅ Break and continue |
-| Comments | Not supported | ✅ Single-line and block comments |
-| For loops | Not supported | ✅ For loops with range |
-| Switch/case | Not supported | ✅ Switch statements |
-| Bitwise operators | Not supported | ✅ AND, OR, XOR, shifts |
+| Category | ArnoldC | ActionC | Built? |
+|----------|---------|---------|--------|
+| Arrays/Collections | Not supported | Integer arrays | ✅ |
+| Floating-point math | Not supported | Float type (declare/init/print) | ✅ |
+| String manipulation | Not supported | String type + functions | ✅ |
+| File I/O | Not supported | Read/write/delete/exists | ✅ |
+| OOP | Not supported | Classes, fields, constructors, inheritance, methods | ✅ |
+| Error handling | Not supported | Try/catch/finally/throw + assert | ✅ |
+| Standard library | None | Math, string, time functions | ✅ |
+| Comparison operators | Only `==` and `>` | All operators (!=, <, >=, <=) | ✅ |
+| Loop control | No break/continue | Break and continue | ✅ |
+| Comments | Not supported | Single-line and block comments | ✅ |
+| For loops | Not supported | For loops with range | ✅ |
+| Switch/case | Not supported | Switch statements | ✅ |
+| Bitwise operators | Not supported | AND, OR, XOR, shifts | ✅ |
+| Lambdas / async | Not supported | Lambdas, function refs, async blocks | ✅ |
 
-See [README.md](README.md) for complete ActionC documentation.
+A few spec items are deliberately deferred or adjusted (trig, explicit boolean/null
+types, inline comparisons in conditions, float arithmetic) — see the "Documented
+deviations" section of [TODO.md](TODO.md).

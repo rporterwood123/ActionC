@@ -18,11 +18,13 @@ object ArnoldC {
     else {
       filename
     }
-    val (bytecode, root) = a.generate(sourceCode, classFilename)
+    val (classes, root) = a.generate(sourceCode, classFilename)
 
-    val out = new FileOutputStream(classFilename + ".class")
-    out.write(bytecode)
-    out.close()
+    classes.foreach { case (className, bytecode) =>
+      val out = new FileOutputStream(className + ".class")
+      out.write(bytecode)
+      out.close()
+    }
 
     processOption(getCommandFromArgs(args), classFilename, root)
 

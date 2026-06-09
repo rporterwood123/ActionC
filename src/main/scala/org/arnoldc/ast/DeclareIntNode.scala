@@ -10,11 +10,18 @@ case class DeclareIntNode(variable: String, value: OperandNode) extends Statemen
 
   def generate(mv: MethodVisitor, symbolTable: SymbolTable) = {
     symbolTable.putVariable(variable)
-    value.generate(mv, symbolTable)
-    if (value.isInstanceOf[NumberNode] || value.isInstanceOf[VariableNode]) {
-      mv.visitVarInsn(ISTORE, symbolTable.getVariableAddress(variable))
+    value match {
+      case _: StringNode => throw new ParsingException("CANNOT INITIALIZE INT WITH STRING VALUE")
+      case _: FloatNode => throw new ParsingException("CANNOT INITIALIZE INT WITH FLOAT VALUE")
+      case FunctionRefNode(target) =>
+        // Record the compile-time function binding; store a placeholder in the slot.
+        symbolTable.putFunctionRef(variable, target)
+        value.generate(mv, symbolTable)
+        mv.visitVarInsn(ISTORE, symbolTable.getVariableAddress(variable))
+      case _ =>
+        value.generate(mv, symbolTable)
+        mv.visitVarInsn(ISTORE, symbolTable.getVariableAddress(variable))
     }
-    else throw new ParsingException("CANNOT INITIALIZE INT WITH BOOLEAN VALUE")
   }
 
 }

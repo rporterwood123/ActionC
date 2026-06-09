@@ -16,10 +16,8 @@ case class AndNode(operand1: AstNode, operand2: AstNode) extends ExpressionNode 
     mv.visitInsn(ICONST_1)
     mv.visitJumpInsn(GOTO, conclude)
     mv.visitLabel(eitherFalse)
-    mv.visitFrame(F_FULL, symbolTable.size(), symbolTable.getStackFrame, 0, null)
     mv.visitInsn(ICONST_0)
     mv.visitJumpInsn(GOTO, conclude)
     mv.visitLabel(conclude)
-    mv.visitFrame(F_SAME1, 0, null, 1, Array(INTEGER))
   }
 }

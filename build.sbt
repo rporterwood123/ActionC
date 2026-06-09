@@ -15,3 +15,11 @@ Test / parallelExecution := false
 // Assembly settings for creating fat JAR
 assembly / assemblyJarName := "ActionC.jar"
 assembly / mainClass := Some("org.arnoldc.ArnoldC")
+
+// The ASM jars each ship a module-info.class; drop them in the fat jar.
+assembly / assemblyMergeStrategy := {
+  case "module-info.class" => MergeStrategy.discard
+  case x =>
+    val old = (assembly / assemblyMergeStrategy).value
+    old(x)
+}

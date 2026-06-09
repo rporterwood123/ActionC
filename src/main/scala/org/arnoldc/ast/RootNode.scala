@@ -4,11 +4,19 @@ import org.objectweb.asm.Opcodes._
 import org.objectweb.asm.{MethodVisitor, ClassWriter}
 import org.arnoldc.{MethodInformation, SymbolTable}
 
-case class RootNode(methods: List[AbstractMethodNode]) extends AstNode {
+case class RootNode(classes: List[ClassDefNode], methods: List[AbstractMethodNode]) extends AstNode {
 
-  def generateByteCode(filename: String): Array[Byte] = {
+  def generateByteCode(filename: String): Map[String, Array[Byte]] = {
     val globalSymbols = storeMethodSignatures(filename)
-    generateClass(filename, globalSymbols).toByteArray
+    // Register class metadata before generating any bodies, so field/method
+    // resolution (including inheritance) works during code generation.
+    classes.foreach(c => globalSymbols.registerClass(c.metadata))
+
+    val mainClass = Map(filename -> generateClass(filename, globalSymbols).toByteArray)
+    val classFiles = classes.map(c => c.className -> c.generateClass(globalSymbols)).toMap
+    // Synthetic classes (e.g. async Runnables) are produced as a side effect of
+    // generating method bodies, so collect them last.
+    mainClass ++ classFiles ++ globalSymbols.collectSyntheticClasses()
   }
 
   def generate(mv: MethodVisitor, symbolTable: SymbolTable) {
@@ -26,7 +34,7 @@ case class RootNode(methods: List[AbstractMethodNode]) extends AstNode {
   }
 
   def generateClass(className: String, globalSymbols: SymbolTable): ClassWriter = {
-    val cw = new ClassWriter(0)
+    val cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES)
     def generateClassHeader() = {
       cw.visit(V1_7, ACC_PUBLIC + ACC_SUPER, className, null, "java/lang/Object", null)
       cw.visitSource("Hello.java", null)
