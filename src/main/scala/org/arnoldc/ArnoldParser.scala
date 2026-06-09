@@ -63,6 +63,14 @@ class ArnoldParser extends Parser {
   val SwitchCase = "WHAT IF I TOLD YOU"
   val SwitchDefault = "SAME OLD SAME OLD"
   val SwitchEnd = "FINISH HIM"
+  val MathAbs = "NO MORE HALF MEASURES"
+  val MathSqrt = "GET TO THE ROOT OF"
+  val MathMax = "MAXIMUM EFFORT OF"
+  val MathMin = "MINIMAL CASUALTIES OF"
+  val MathPow = "UNLIMITED POWER OF"
+  val MathRandom = "GO AHEAD MAKE MY DAY"
+  val TimeNow = "WHAT TIME IS IT"
+  val Sleep = "CHILL OUT FOR"
   val Assert = "I AM THE LAW"
   val TryStart = "LET'S SEE WHAT YOU'VE GOT"
   val Throw = "WELCOME TO THE PARTY PAL"
@@ -80,6 +88,15 @@ class ArnoldParser extends Parser {
   val DeclareString = "I HAVE COME HERE TO CHEW BUBBLEGUM"
   val StringAssign = "AND KICK ASS"
   val EmptyString = "AND I'M ALL OUT OF BUBBLEGUM"
+  val StrUpper = "SAY IT LOUDER"
+  val StrLower = "KEEP YOUR VOICE DOWN"
+  val StrTrim = "CUT THE FAT FROM"
+  val StrSubstring = "GIVE ME A PIECE OF"
+  val StrSubFrom = "FROM"
+  val StrSubTo = "TO"
+  val StrLength = "HOW LONG IS THIS THING"
+  val StrContains = "YOU TALKING TO ME ABOUT"
+  val StrIndexOf = "WHERE IS IT IN"
 
   val SingleLineComment = "I'M BATMAN"
   val BlockCommentStart = "GATHER ROUND"
@@ -123,7 +140,11 @@ class ArnoldParser extends Parser {
       BreakStatement | ContinueStatement | SwitchStatement |
       StringDeclareStatement | FloatDeclareStatement |
       ArrayDeclareStatement | ArrayAssignStatement |
-      TryStatement | ThrowStatement | AssertStatement
+      TryStatement | ThrowStatement | AssertStatement | SleepStatement
+  }
+
+  def SleepStatement: Rule1[StatementNode] = rule {
+    Sleep ~ WhiteSpace ~ Operand ~ EOL ~~> SleepNode
   }
 
   def AssertStatement: Rule1[StatementNode] = rule {
@@ -167,9 +188,18 @@ class ArnoldParser extends Parser {
   }
 
   def StringOperand: Rule1[OperandNode] = rule {
-    "\"" ~ String ~ "\"" |
+    StringFunction |
+      "\"" ~ String ~ "\"" |
       EmptyString ~ push(StringNode("")) |
       Variable
+  }
+
+  def StringFunction: Rule1[OperandNode] = rule {
+    StrUpper ~ WhiteSpace ~ StringOperand ~~> UpperNode |
+      StrLower ~ WhiteSpace ~ StringOperand ~~> LowerNode |
+      StrTrim ~ WhiteSpace ~ StringOperand ~~> TrimNode |
+      StrSubstring ~ WhiteSpace ~ StringOperand ~ WhiteSpace ~
+        StrSubFrom ~ WhiteSpace ~ Operand ~ WhiteSpace ~ StrSubTo ~ WhiteSpace ~ Operand ~~> SubstringNode
   }
 
   def SwitchStatement: Rule1[StatementNode] = rule {
@@ -249,7 +279,23 @@ class ArnoldParser extends Parser {
   }
 
   def Operand: Rule1[OperandNode] = rule {
-    Number | ArrayAccessOperand | ArrayLengthOperand | Variable | Boolean
+    Number | ArrayAccessOperand | ArrayLengthOperand | MathOperand | StringIntFunction |
+      (TimeNow ~ push(TimeNode())) | Variable | Boolean
+  }
+
+  def StringIntFunction: Rule1[OperandNode] = rule {
+    StrLength ~ WhiteSpace ~ StringOperand ~~> LengthNode |
+      StrContains ~ WhiteSpace ~ StringOperand ~ WhiteSpace ~ StringOperand ~~> ContainsNode |
+      StrIndexOf ~ WhiteSpace ~ StringOperand ~ WhiteSpace ~ StringOperand ~~> IndexOfNode
+  }
+
+  def MathOperand: Rule1[OperandNode] = rule {
+    MathAbs ~ WhiteSpace ~ Operand ~~> AbsNode |
+      MathSqrt ~ WhiteSpace ~ Operand ~~> SqrtNode |
+      MathMax ~ WhiteSpace ~ Operand ~ WhiteSpace ~ Operand ~~> MaxNode |
+      MathMin ~ WhiteSpace ~ Operand ~ WhiteSpace ~ Operand ~~> MinNode |
+      MathPow ~ WhiteSpace ~ Operand ~ WhiteSpace ~ Operand ~~> PowNode |
+      MathRandom ~ WhiteSpace ~ Operand ~~> RandomNode
   }
 
   def ArrayAccessOperand: Rule1[OperandNode] = rule {
