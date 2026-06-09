@@ -26,7 +26,7 @@ case class RootNode(methods: List[AbstractMethodNode]) extends AstNode {
   }
 
   def generateClass(className: String, globalSymbols: SymbolTable): ClassWriter = {
-    val cw = new ClassWriter(0)
+    val cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES)
     def generateClassHeader() = {
       cw.visit(V1_7, ACC_PUBLIC + ACC_SUPER, className, null, "java/lang/Object", null)
       cw.visitSource("Hello.java", null)

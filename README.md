@@ -6,7 +6,12 @@
 
 ActionC is an esoteric programming language based on iconic one-liners from action movies. It extends the original [ArnoldC](https://github.com/lhartikk/ArnoldC) with quotes from Die Hard, Aliens, Lethal Weapon, Robocop, The Matrix, and many more classics.
 
-**378 tests passing** | **Tier 7 Complete**
+> ⚠️ **Status (2026-06-09): this README documents the *target* language. ActionC is
+> not implemented yet** — the compiler is still vanilla ArnoldC (int-only; if/else,
+> while, functions). Floats, strings, arrays, OOP, lambdas, async, and the stdlib
+> shown below are **designed but not built**. There are no ActionC-specific tests
+> yet. See [TODO.md](TODO.md) for the honest roadmap and [ACTIONC_SPEC.md](ACTIONC_SPEC.md)
+> for the design.
 
 ---
 

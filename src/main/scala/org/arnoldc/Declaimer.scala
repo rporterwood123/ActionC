@@ -1,13 +1,5 @@
 package org.arnoldc
 
-import java.util.Locale
-import javax.speech.Central
-import javax.speech.synthesis.Synthesizer
-import javax.speech.synthesis.SynthesizerModeDesc
-import javax.speech.synthesis.Voice
-import com.sun.speech.freetts.audio.AudioPlayer
-import com.sun.speech.freetts.audio.SingleFileAudioPlayer
-import javax.sound.sampled.AudioFileFormat.Type
 import org.arnoldc.ast._
 
 object Declaimer {
@@ -118,42 +110,18 @@ object Declaimer {
 
 }
 
+// Console-based fallback for the `-declaim` feature. The original implementation
+// synthesized speech via FreeTTS/JSAPI (javax.speech, com.sun.speech.freetts),
+// native TTS libraries that are not declared in the build and are not cleanly
+// available on Maven Central. Rather than drop the feature, `declaim` now prints
+// the spoken form of the program to stdout.
 object SpeechUtils {
-  System.setProperty("freetts.voices",
-    "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory")
 
-  val desc = new SynthesizerModeDesc(Locale.US)
+  def init(voiceName: String, outputFile: String): Unit = {}
 
-  Central.registerEngineCentral("com.sun.speech.freetts.jsapi.FreeTTSEngineCentral")
+  def terminate(): Unit = {}
 
-  val synthesizer = Central.createSynthesizer(desc)
-  synthesizer.allocate()
-  synthesizer.resume()
-
-  val smd = synthesizer.getEngineModeDesc().asInstanceOf[SynthesizerModeDesc]
-  val voices = smd.getVoices()
-
-  var voice: Voice = null
-
-  def init(voiceName: String, outputFile: String) {
-    for (v <- voices) {
-      if (v.getName().equals(voiceName)) {
-        voice = v
-        val audioPlayer = new SingleFileAudioPlayer(outputFile, Type.WAVE);
-        voice.asInstanceOf[com.sun.speech.freetts.jsapi.FreeTTSVoice].getVoice.setAudioPlayer(audioPlayer)
-        synthesizer.getSynthesizerProperties().setVoice(voice);
-        return
-      }
-    }
+  def doSpeak(speakText: String): Unit = {
+    print(speakText)
   }
-
-  def terminate() = {
-    synthesizer.deallocate()
-  }
-
-  def doSpeak(speakText: String) {
-    //println(speakText)
-    synthesizer.speakPlainText(speakText, null);
-    synthesizer.waitEngineState(Synthesizer.QUEUE_EMPTY);
-  }
-}  
+}

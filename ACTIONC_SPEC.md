@@ -4,6 +4,13 @@
 
 **Version 2.0** | The 80s/90s Action Movie Programming Language
 
+> ⚠️ **Implementation status (2026-06-09): this is a DESIGN SPEC, not a description
+> of shipped behavior.** None of the ActionC features below are implemented yet —
+> the compiler is still vanilla ArnoldC (int-only; if/else, while, functions; no
+> floats, strings, arrays, OOP, lambdas, async, or stdlib). "PLANNED" markers and
+> the EBNF describe the *target* language. See [TODO.md](TODO.md) for the honest,
+> dependency-ordered roadmap to actually build what this document specifies.
+
 ---
 
 ## Table of Contents
@@ -411,7 +418,7 @@ GET YOUR ASS TO MARS result
 DO IT NOW functionName arg1
 ```
 
-### 7.4 Lambda Functions ✅ IMPLEMENTED
+### 7.4 Lambda Functions (PLANNED — NOT BUILT)
 
 Inline function definitions that compile to static methods.
 
@@ -457,7 +464,7 @@ CALL ME SNAKE name (param1 param2 ...) => expression
 - Body is a single expression using arithmetic operators
 - Lambdas always return a value (non-void)
 
-### 7.5 Async/Concurrency ✅ IMPLEMENTED
+### 7.5 Async/Concurrency (PLANNED — NOT BUILT)
 
 Async blocks run in separate threads, allowing concurrent execution.
 
@@ -678,7 +685,7 @@ TALK TO THE HAND TIMES UP    I'M BATMAN print elapsed time
 
 ActionC supports full OOP including classes, fields, constructors, inheritance, instance methods, and this reference.
 
-### 11.1 Class Definition ✅ IMPLEMENTED
+### 11.1 Class Definition (PLANNED — NOT BUILT)
 
 ```actionc
 MY NAME IS MAXIMUS className
@@ -696,14 +703,14 @@ STRENGTH AND HONOR
 
 | Keyword | Purpose | Source | Status |
 |---------|---------|--------|--------|
-| `MY NAME IS MAXIMUS` | Class declaration | Gladiator (2000) | ✅ |
-| `THAT'S CLASSIFIED` | Private field | Various | ✅ |
-| `OPEN TO THE PUBLIC` | Public field | Various | ✅ |
-| `IT'S ALIVE` | Constructor start | Frankenstein reference | ✅ |
-| `BIRTH COMPLETE` | Constructor end | Frankenstein reference | ✅ |
-| `STRENGTH AND HONOR` | End class | Gladiator (2000) | ✅ |
+| `MY NAME IS MAXIMUS` | Class declaration | Gladiator (2000) | ❌ |
+| `THAT'S CLASSIFIED` | Private field | Various | ❌ |
+| `OPEN TO THE PUBLIC` | Public field | Various | ❌ |
+| `IT'S ALIVE` | Constructor start | Frankenstein reference | ❌ |
+| `BIRTH COMPLETE` | Constructor end | Frankenstein reference | ❌ |
+| `STRENGTH AND HONOR` | End class | Gladiator (2000) | ❌ |
 
-### 11.2 Object Instantiation ✅ IMPLEMENTED
+### 11.2 Object Instantiation (PLANNED — NOT BUILT)
 
 ```actionc
 WELCOME TO EARTH myObject AS MyClass
@@ -711,10 +718,10 @@ WELCOME TO EARTH myObject AS MyClass
 
 | Keyword | Purpose | Source | Status |
 |---------|---------|--------|--------|
-| `WELCOME TO EARTH` | Create new instance | Will Smith - Independence Day | ✅ |
-| `AS` | Type specifier | Standard | ✅ |
+| `WELCOME TO EARTH` | Create new instance | Will Smith - Independence Day | ❌ |
+| `AS` | Type specifier | Standard | ❌ |
 
-### 11.3 Field Access ✅ IMPLEMENTED
+### 11.3 Field Access (PLANNED — NOT BUILT)
 
 ```actionc
 I'M BATMAN Read field value
@@ -790,7 +797,7 @@ IT'S SHOWTIME
 YOU HAVE BEEN TERMINATED
 ```
 
-### 11.6 Inheritance ✅ IMPLEMENTED
+### 11.6 Inheritance (PLANNED — NOT BUILT)
 
 Classes can extend other classes using `LIKE FATHER LIKE SON`.
 
@@ -825,7 +832,7 @@ YOU HAVE BEEN TERMINATED
 |---------|---------|--------|
 | `LIKE FATHER LIKE SON` | Extend parent class | Various |
 
-### 11.7 This Reference ✅ IMPLEMENTED
+### 11.7 This Reference (PLANNED — NOT BUILT)
 
 Access the current instance using `LOOK AT ME`.
 
@@ -846,7 +853,7 @@ STRENGTH AND HONOR
 | `LOOK AT ME` | This/self reference | Predator (Dutch) |
 | `LOOK AT ME.field` | Access field on this | — |
 
-### 11.8 Instance Methods ✅ IMPLEMENTED
+### 11.8 Instance Methods (PLANNED — NOT BUILT)
 
 Define methods on classes that can access instance fields.
 

@@ -136,22 +136,28 @@ The language is essentially a minimal procedural language with only integers, ba
 
 ## ActionC Improvements
 
-**ActionC** addresses many of these limitations:
+**ActionC is designed to address** many of these limitations. ⚠️ **Status note
+(2026-06-09): none of these improvements are implemented yet.** The compiler is
+still vanilla ArnoldC; the items below are the *design targets* specified in
+[ACTIONC_SPEC.md](ACTIONC_SPEC.md), not shipped features. See [TODO.md](TODO.md)
+for the honest, dependency-ordered implementation roadmap.
 
-| Category | ArnoldC | ActionC |
-|----------|---------|---------|
-| Arrays/Collections | Not supported | ✅ Integer arrays |
-| Floating-point math | Not supported | ✅ Float type |
-| String manipulation | Not supported | ✅ String type + functions |
-| File I/O | Not supported | ✅ Read/write/delete/exists |
-| OOP | Not supported | ✅ Classes, fields, constructors |
-| Error handling | Not supported | ✅ Try/catch/throw |
-| Standard library | None | ✅ Math, string, time functions |
-| Comparison operators | Only `==` and `>` | ✅ All operators (!=, <, >=, <=) |
-| Loop control | No break/continue | ✅ Break and continue |
-| Comments | Not supported | ✅ Single-line and block comments |
-| For loops | Not supported | ✅ For loops with range |
-| Switch/case | Not supported | ✅ Switch statements |
-| Bitwise operators | Not supported | ✅ AND, OR, XOR, shifts |
+| Category | ArnoldC | ActionC (planned) | Built? |
+|----------|---------|-------------------|--------|
+| Arrays/Collections | Not supported | Integer arrays | ❌ |
+| Floating-point math | Not supported | Float type | ❌ |
+| String manipulation | Not supported | String type + functions | ❌ |
+| File I/O | Not supported | Read/write/delete/exists | ❌ |
+| OOP | Not supported | Classes, fields, constructors | ❌ |
+| Error handling | Not supported | Try/catch/throw | ❌ |
+| Standard library | None | Math, string, time functions | ❌ |
+| Comparison operators | Only `==` and `>` | All operators (!=, <, >=, <=) | ❌ |
+| Loop control | No break/continue | Break and continue | ❌ |
+| Comments | Not supported | Single-line and block comments | ❌ |
+| For loops | Not supported | For loops with range | ❌ |
+| Switch/case | Not supported | Switch statements | ❌ |
+| Bitwise operators | Not supported | AND, OR, XOR, shifts | ❌ |
 
-See [README.md](README.md) for complete ActionC documentation.
+The "ArnoldC" column above reflects what **actually works today**, since ActionC
+currently *is* ArnoldC. See [ACTIONC_SPEC.md](ACTIONC_SPEC.md) for the target
+language design and [TODO.md](TODO.md) for what remains to build it.

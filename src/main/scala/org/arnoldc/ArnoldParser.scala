@@ -25,9 +25,14 @@ class ArnoldParser extends Parser {
   val False = "I LIED"
   val True = "NO PROBLEMO"
   val EqualTo = "YOU ARE NOT YOU YOU ARE ME"
+  val NotEqual = "IT'S JUST BEEN REVOKED"
   val GreaterThan = "LET OFF SOME STEAM BENNET"
+  val LessThan = "YOU'RE THE DISEASE AND I'M THE CURE"
+  val GreaterOrEqual = "I'M GETTING TOO OLD FOR THIS"
+  val LessOrEqual = "BENEATH YOU"
   val Or = "CONSIDER THAT A DIVORCE"
   val And = "KNOCK KNOCK"
+  val Not = "NEGATIVE"
   val If = "BECAUSE I'M GOING TO SAY PLEASE"
   val Else = "BULLSHIT"
   val EndIf = "YOU HAVE NO RESPECT FOR LOGIC"
@@ -41,8 +46,32 @@ class ArnoldParser extends Parser {
   val NonVoidMethod = "GIVE THESE PEOPLE AIR"
   val AssignVariableFromMethodCall = "GET YOUR ASS TO MARS"
   val Modulo = "I LET HIM GO"
+  val Increment = "ONE MORE TIME"
+  val Decrement = "COUNTDOWN"
+  val ForStart = "LET'S ROCK"
+  val ForFrom = "FROM"
+  val ForTo = "TO"
+  val ForEnd = "GAME OVER MAN GAME OVER"
+  val Break = "GET OUT"
+  val Continue = "KEEP MOVING"
+  val SwitchStart = "CHOOSE YOUR DESTINY"
+  val SwitchCase = "WHAT IF I TOLD YOU"
+  val SwitchDefault = "SAME OLD SAME OLD"
+  val SwitchEnd = "FINISH HIM"
 
-  val EOL = zeroOrMore("\t" | "\r" | " ") ~ "\n" ~ zeroOrMore("\t" | "\r" | " " | "\n")
+  val SingleLineComment = "I'M BATMAN"
+  val BlockCommentStart = "GATHER ROUND"
+  val BlockCommentEnd = "DISMISSED"
+
+  // A single-line comment runs to (but not including) the end of the line.
+  def LineComment: Rule0 = rule { SingleLineComment ~ zeroOrMore(!anyOf("\n") ~ ANY) }
+  // A block comment spans everything between the start and end markers.
+  def BlockComment: Rule0 = rule { BlockCommentStart ~ zeroOrMore(!BlockCommentEnd ~ ANY) ~ BlockCommentEnd }
+
+  val EOL = rule {
+    zeroOrMore("\t" | "\r" | " ") ~ optional(BlockComment | LineComment) ~ "\n" ~
+      zeroOrMore("\t" | "\r" | " " | "\n" | BlockComment | LineComment)
+  }
   val WhiteSpace = oneOrMore(" " | "\t")
 
   def Root: Rule1[RootNode] = rule {
@@ -67,7 +96,47 @@ class ArnoldParser extends Parser {
   def Statement: Rule1[StatementNode] = rule {
     DeclareIntStatement | PrintStatement |
       AssignVariableStatement | ConditionStatement |
-      WhileStatement | CallMethodStatement | ReturnStatement | CallReadMethodStatement
+      WhileStatement | CallMethodStatement | ReturnStatement | CallReadMethodStatement |
+      IncrementStatement | DecrementStatement | ForLoopStatement |
+      BreakStatement | ContinueStatement | SwitchStatement
+  }
+
+  def SwitchStatement: Rule1[StatementNode] = rule {
+    SwitchStart ~ WhiteSpace ~ Operand ~ EOL ~
+      zeroOrMore(CaseClauseRule) ~
+      optional(DefaultClauseRule) ~
+      SwitchEnd ~ EOL ~~> SwitchNode
+  }
+
+  def CaseClauseRule: Rule1[CaseClause] = rule {
+    SwitchCase ~ WhiteSpace ~ Number ~ EOL ~ zeroOrMore(Statement) ~~> CaseClause
+  }
+
+  def DefaultClauseRule: Rule1[List[StatementNode]] = rule {
+    SwitchDefault ~ EOL ~ zeroOrMore(Statement) ~~> (stmts => stmts)
+  }
+
+  def BreakStatement: Rule1[StatementNode] = rule {
+    Break ~ EOL ~ push(BreakNode())
+  }
+
+  def ContinueStatement: Rule1[StatementNode] = rule {
+    Continue ~ EOL ~ push(ContinueNode())
+  }
+
+  def ForLoopStatement: Rule1[StatementNode] = rule {
+    ForStart ~ WhiteSpace ~ VariableName ~> (v => v) ~ WhiteSpace ~
+      ForFrom ~ WhiteSpace ~ Operand ~ WhiteSpace ~
+      ForTo ~ WhiteSpace ~ Operand ~ EOL ~
+      zeroOrMore(Statement) ~ ForEnd ~ EOL ~~> ForLoopNode
+  }
+
+  def IncrementStatement: Rule1[StatementNode] = rule {
+    Increment ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~~> IncrementNode
+  }
+
+  def DecrementStatement: Rule1[StatementNode] = rule {
+    Decrement ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~~> DecrementNode
   }
 
   def CallMethodStatement: Rule1[StatementNode] = rule {
@@ -114,14 +183,22 @@ class ArnoldParser extends Parser {
 
   def Expression: Rule1[AstNode] = rule {
     SetValueExpression ~
-      (zeroOrMore(ArithmeticOperation | LogicalOperation))
+      (zeroOrMore(ArithmeticOperation | LogicalOperation | UnaryOperation))
+  }
+
+  def UnaryOperation: ReductionRule1[AstNode, AstNode] = rule {
+    Not ~ EOL ~~> NotNode
   }
 
   def LogicalOperation: ReductionRule1[AstNode, AstNode] = rule {
     Or ~ WhiteSpace ~ Operand ~ EOL ~~> OrNode |
       And ~ WhiteSpace ~ Operand ~ EOL ~~> AndNode |
       EqualTo ~ WhiteSpace ~ Operand ~ EOL ~~> EqualToNode |
-      GreaterThan ~ WhiteSpace ~ Operand ~ EOL ~~> GreaterThanNode
+      NotEqual ~ WhiteSpace ~ Operand ~ EOL ~~> NotEqualNode |
+      GreaterThan ~ WhiteSpace ~ Operand ~ EOL ~~> GreaterThanNode |
+      LessThan ~ WhiteSpace ~ Operand ~ EOL ~~> LessThanNode |
+      GreaterOrEqual ~ WhiteSpace ~ Operand ~ EOL ~~> GreaterOrEqualNode |
+      LessOrEqual ~ WhiteSpace ~ Operand ~ EOL ~~> LessOrEqualNode
 
   }
 

@@ -1,8 +1,9 @@
 package org.arnoldc
 
-import org.scalatest._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-abstract  class ArnoldGeneratorTest extends FlatSpec with Matchers {
+abstract  class ArnoldGeneratorTest extends AnyFlatSpec with Matchers {
 
   val arnoldGenerator = new ArnoldGenerator
   val byteCodeExecutor = new ByteCodeExecutor

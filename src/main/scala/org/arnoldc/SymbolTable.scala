@@ -3,6 +3,7 @@ package org.arnoldc
 import scala.collection.mutable
 import org.parboiled.errors.ParsingException
 import org.objectweb.asm.Opcodes._
+import org.objectweb.asm.Label
 
 case class SymbolTable(upperLevel: Option[SymbolTable], currentMethod: String) {
 
@@ -10,16 +11,32 @@ case class SymbolTable(upperLevel: Option[SymbolTable], currentMethod: String) {
   private val variableTable = new mutable.HashMap[String, Integer]()
   private val methodTable = new mutable.HashMap[String, MethodInformation]()
 
+  // Stack of (continueLabel, breakLabel) for the enclosing loops, innermost last.
+  // Used by GET OUT (break) and KEEP MOVING (continue).
+  private var loopContexts: List[(Label, Label)] = Nil
+
+  def enterLoop(continueLabel: Label, breakLabel: Label): Unit = {
+    loopContexts = (continueLabel, breakLabel) :: loopContexts
+  }
+
+  def exitLoop(): Unit = {
+    loopContexts = loopContexts.tail
+  }
+
+  def currentBreakLabel: Label = loopContexts match {
+    case (_, breakLabel) :: _ => breakLabel
+    case Nil => throw new ParsingException("GET OUT USED OUTSIDE OF A LOOP")
+  }
+
+  def currentContinueLabel: Label = loopContexts match {
+    case (continueLabel, _) :: _ => continueLabel
+    case Nil => throw new ParsingException("KEEP MOVING USED OUTSIDE OF A LOOP")
+  }
+
   val initialNextVarAddress: Int = FirstSymbolTableAddress
 
   def size(): Int = {
     initialNextVarAddress + variableTable.size
-  }
-
-  def getStackFrame: Array[AnyRef] = {
-    Stream.iterate(INTEGER: AnyRef) {
-      i => i
-    }.take(size()).toArray
   }
 
   def putVariable(variableName: String) = {
@@ -28,6 +45,10 @@ case class SymbolTable(upperLevel: Option[SymbolTable], currentMethod: String) {
       throw new ParsingException("DUPLICATE VARIABLE: " + variableName)
     }
     variableTable += (variableName -> newVarAddress)
+  }
+
+  def containsVariable(variableName: String): Boolean = {
+    variableTable.contains(variableName) || upperLevel.exists(_.containsVariable(variableName))
   }
 
   def getVariableAddress(variableName: String): Integer = {
