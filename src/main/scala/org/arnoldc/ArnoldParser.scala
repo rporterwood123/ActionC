@@ -71,6 +71,11 @@ class ArnoldParser extends Parser {
   val MathRandom = "GO AHEAD MAKE MY DAY"
   val TimeNow = "WHAT TIME IS IT"
   val Sleep = "CHILL OUT FOR"
+  val FileRead = "WHAT'S IN THE BOX"
+  val FileWrite = "WRITE THAT DOWN"
+  val FileWriteTo = "TO"
+  val FileExists = "HONEY I'M HOME"
+  val FileDelete = "SEAL THE EXITS"
   val Assert = "I AM THE LAW"
   val TryStart = "LET'S SEE WHAT YOU'VE GOT"
   val Throw = "WELCOME TO THE PARTY PAL"
@@ -140,7 +145,16 @@ class ArnoldParser extends Parser {
       BreakStatement | ContinueStatement | SwitchStatement |
       StringDeclareStatement | FloatDeclareStatement |
       ArrayDeclareStatement | ArrayAssignStatement |
-      TryStatement | ThrowStatement | AssertStatement | SleepStatement
+      TryStatement | ThrowStatement | AssertStatement | SleepStatement |
+      WriteFileStatement | DeleteFileStatement
+  }
+
+  def WriteFileStatement: Rule1[StatementNode] = rule {
+    FileWrite ~ WhiteSpace ~ StringOperand ~ WhiteSpace ~ FileWriteTo ~ WhiteSpace ~ StringOperand ~ EOL ~~> WriteFileNode
+  }
+
+  def DeleteFileStatement: Rule1[StatementNode] = rule {
+    FileDelete ~ WhiteSpace ~ StringOperand ~ EOL ~~> DeleteFileNode
   }
 
   def SleepStatement: Rule1[StatementNode] = rule {
@@ -189,6 +203,7 @@ class ArnoldParser extends Parser {
 
   def StringOperand: Rule1[OperandNode] = rule {
     StringFunction |
+      (FileRead ~ WhiteSpace ~ StringOperand ~~> ReadFileNode) |
       "\"" ~ String ~ "\"" |
       EmptyString ~ push(StringNode("")) |
       Variable
@@ -280,7 +295,8 @@ class ArnoldParser extends Parser {
 
   def Operand: Rule1[OperandNode] = rule {
     Number | ArrayAccessOperand | ArrayLengthOperand | MathOperand | StringIntFunction |
-      (TimeNow ~ push(TimeNode())) | Variable | Boolean
+      (TimeNow ~ push(TimeNode())) | (FileExists ~ WhiteSpace ~ StringOperand ~~> FileExistsNode) |
+      Variable | Boolean
   }
 
   def StringIntFunction: Rule1[OperandNode] = rule {
