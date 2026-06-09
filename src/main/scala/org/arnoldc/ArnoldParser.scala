@@ -46,6 +46,11 @@ class ArnoldParser extends Parser {
   val NonVoidMethod = "GIVE THESE PEOPLE AIR"
   val AssignVariableFromMethodCall = "GET YOUR ASS TO MARS"
   val Modulo = "I LET HIM GO"
+  val BitwiseAnd = "WINNERS GO HOME AND DATE THE PROM QUEEN"
+  val BitwiseOr = "DEAD OR ALIVE YOU'RE COMING WITH ME"
+  val BitwiseXor = "FRIEND OR FOE"
+  val LeftShift = "MOVE IT"
+  val RightShift = "FALL BACK"
   val Increment = "ONE MORE TIME"
   val Decrement = "COUNTDOWN"
   val ForStart = "LET'S ROCK"
@@ -58,6 +63,14 @@ class ArnoldParser extends Parser {
   val SwitchCase = "WHAT IF I TOLD YOU"
   val SwitchDefault = "SAME OLD SAME OLD"
   val SwitchEnd = "FINISH HIM"
+  val DeclareArray = "I AIN'T GOT TIME TO BLEED"
+  val ArraySize = "UGLY MOTHERFUCKERS"
+  val ArrayWith = "WITH"
+  val ArrayAccess = "GET IN LINE"
+  val ArrayAt = "AT"
+  val ArrayLength = "HOW MANY OF THEM"
+  val DeclareFloat = "NOW I HAVE A MACHINE GUN"
+  val InitFloat = "HO HO HO"
   val DeclareString = "I HAVE COME HERE TO CHEW BUBBLEGUM"
   val StringAssign = "AND KICK ASS"
   val EmptyString = "AND I'M ALL OUT OF BUBBLEGUM"
@@ -102,7 +115,28 @@ class ArnoldParser extends Parser {
       WhileStatement | CallMethodStatement | ReturnStatement | CallReadMethodStatement |
       IncrementStatement | DecrementStatement | ForLoopStatement |
       BreakStatement | ContinueStatement | SwitchStatement |
-      StringDeclareStatement
+      StringDeclareStatement | FloatDeclareStatement |
+      ArrayDeclareStatement | ArrayAssignStatement
+  }
+
+  def ArrayDeclareStatement: Rule1[StatementNode] = rule {
+    DeclareArray ~ WhiteSpace ~ VariableName ~> (v => v) ~ WhiteSpace ~
+      ArrayWith ~ WhiteSpace ~ Operand ~ WhiteSpace ~ ArraySize ~ EOL ~~> ArrayDeclareNode
+  }
+
+  def ArrayAssignStatement: Rule1[StatementNode] = rule {
+    ArrayAccess ~ WhiteSpace ~ VariableName ~> (v => v) ~ WhiteSpace ~
+      ArrayAt ~ WhiteSpace ~ Operand ~ EOL ~
+      Expression ~ EndAssignVariable ~ EOL ~~> ArrayAssignNode
+  }
+
+  def FloatDeclareStatement: Rule1[StatementNode] = rule {
+    DeclareFloat ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~
+      InitFloat ~ WhiteSpace ~ FloatLiteral ~ EOL ~~> FloatDeclareNode
+  }
+
+  def FloatLiteral: Rule1[FloatNode] = rule {
+    group(optional("-") ~ oneOrMore("0" - "9") ~ "." ~ oneOrMore("0" - "9")) ~> (s => FloatNode(s.toFloat))
   }
 
   def StringDeclareStatement: Rule1[StatementNode] = rule {
@@ -193,12 +227,28 @@ class ArnoldParser extends Parser {
   }
 
   def Operand: Rule1[OperandNode] = rule {
-    Number | Variable | Boolean
+    Number | ArrayAccessOperand | ArrayLengthOperand | Variable | Boolean
+  }
+
+  def ArrayAccessOperand: Rule1[OperandNode] = rule {
+    ArrayAccess ~ WhiteSpace ~ VariableName ~> (v => v) ~ WhiteSpace ~ ArrayAt ~ WhiteSpace ~ Operand ~~> ArrayAccessNode
+  }
+
+  def ArrayLengthOperand: Rule1[OperandNode] = rule {
+    ArrayLength ~ WhiteSpace ~ VariableName ~> (v => v) ~~> ArrayLengthNode
   }
 
   def Expression: Rule1[AstNode] = rule {
     SetValueExpression ~
-      (zeroOrMore(ArithmeticOperation | LogicalOperation | UnaryOperation))
+      (zeroOrMore(ArithmeticOperation | LogicalOperation | BitwiseOperation | UnaryOperation))
+  }
+
+  def BitwiseOperation: ReductionRule1[AstNode, AstNode] = rule {
+    BitwiseAnd ~ WhiteSpace ~ Operand ~ EOL ~~> BitwiseAndNode |
+      BitwiseOr ~ WhiteSpace ~ Operand ~ EOL ~~> BitwiseOrNode |
+      BitwiseXor ~ WhiteSpace ~ Operand ~ EOL ~~> BitwiseXorNode |
+      LeftShift ~ WhiteSpace ~ Operand ~ EOL ~~> LeftShiftNode |
+      RightShift ~ WhiteSpace ~ Operand ~ EOL ~~> RightShiftNode
   }
 
   def UnaryOperation: ReductionRule1[AstNode, AstNode] = rule {
