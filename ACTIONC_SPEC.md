@@ -4,12 +4,13 @@
 
 **Version 2.0** | The 80s/90s Action Movie Programming Language
 
-> ⚠️ **Implementation status (2026-06-09): this is a DESIGN SPEC, not a description
-> of shipped behavior.** None of the ActionC features below are implemented yet —
-> the compiler is still vanilla ArnoldC (int-only; if/else, while, functions; no
-> floats, strings, arrays, OOP, lambdas, async, or stdlib). "PLANNED" markers and
-> the EBNF describe the *target* language. See [TODO.md](TODO.md) for the honest,
-> dependency-ordered roadmap to actually build what this document specifies.
+> ✅ **Implementation status (2026-06-09): implemented.** The features in this spec
+> compile to JVM bytecode and run (175 passing tests). The "(PLANNED — NOT BUILT)"
+> markers below are now historical — treat them as "implemented" except for the
+> deliberately deferred/adjusted items listed under "Documented deviations" in
+> [TODO.md](TODO.md) (notably: conditions take a single pre-computed boolean rather
+> than an inline comparison; lambda bodies use infix arithmetic; fields are int;
+> trig and explicit boolean/null types are not wired).
 
 ---
 

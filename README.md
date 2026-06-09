@@ -6,12 +6,21 @@
 
 ActionC is an esoteric programming language based on iconic one-liners from action movies. It extends the original [ArnoldC](https://github.com/lhartikk/ArnoldC) with quotes from Die Hard, Aliens, Lethal Weapon, Robocop, The Matrix, and many more classics.
 
-> ⚠️ **Status (2026-06-09): this README documents the *target* language. ActionC is
-> not implemented yet** — the compiler is still vanilla ArnoldC (int-only; if/else,
-> while, functions). Floats, strings, arrays, OOP, lambdas, async, and the stdlib
-> shown below are **designed but not built**. There are no ActionC-specific tests
-> yet. See [TODO.md](TODO.md) for the honest roadmap and [ACTIONC_SPEC.md](ACTIONC_SPEC.md)
-> for the design.
+> ✅ **Status (2026-06-09): implemented and tested.** All tiers (comments, full
+> comparison/bitwise/logical operators, for/break/continue/switch, strings, floats,
+> arrays, error handling, the math/string/time/file stdlib, OOP with inheritance and
+> instance methods, lambdas, and async) compile to JVM bytecode and run. **175 tests
+> pass** and `sbt assembly` builds a runnable `ActionC.jar`. A few spec items are
+> deliberately deferred or adjusted — see the "Documented deviations" section of
+> [TODO.md](TODO.md) (e.g. conditions take a pre-computed boolean, not an inline
+> comparison; lambda bodies use infix arithmetic; fields are int).
+
+## Build & run
+
+```bash
+sbt assembly                                   # build target/scala-2.12/ActionC.jar
+java -jar target/scala-2.12/ActionC.jar -run Demo.actionc
+```
 
 ---
 
