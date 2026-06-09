@@ -22,6 +22,16 @@ case class SymbolTable(upperLevel: Option[SymbolTable], currentMethod: String) {
   // any. When set, `this` is at local slot 0 and bare names may resolve to fields.
   var currentClass: Option[String] = None
 
+  // Function references: a variable bound to a (statically-known) lambda/function
+  // name via THE NAME'S PLISSKEN. Calls on the variable resolve to that function.
+  private val functionRefs = new mutable.HashMap[String, String]()
+
+  def putFunctionRef(variableName: String, targetFunction: String): Unit =
+    functionRefs.put(variableName, targetFunction)
+
+  def getFunctionRef(variableName: String): Option[String] =
+    functionRefs.get(variableName).orElse(upperLevel.flatMap(_.getFunctionRef(variableName)))
+
   // Stack of (continueLabel, breakLabel) for the enclosing loops, innermost last.
   // Used by GET OUT (break) and KEEP MOVING (continue).
   private var loopContexts: List[(Label, Label)] = Nil

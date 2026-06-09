@@ -46,6 +46,8 @@ class ArnoldParser extends Parser {
   val NonVoidMethod = "GIVE THESE PEOPLE AIR"
   val AssignVariableFromMethodCall = "GET YOUR ASS TO MARS"
   val Modulo = "I LET HIM GO"
+  val LambdaDef = "CALL ME SNAKE"
+  val FunctionRef = "THE NAME'S PLISSKEN"
   val BitwiseAnd = "WINNERS GO HOME AND DATE THE PROM QUEEN"
   val BitwiseOr = "DEAD OR ALIVE YOU'RE COMING WITH ME"
   val BitwiseXor = "FRIEND OR FOE"
@@ -160,7 +162,25 @@ class ArnoldParser extends Parser {
   }
 
   def AbstractMethod: Rule1[AbstractMethodNode] = rule {
-    (MainMethod | Method) ~ optional(EOL)
+    (MainMethod | Method | LambdaDefinition) ~ optional(EOL)
+  }
+
+  def LambdaDefinition: Rule1[AbstractMethodNode] = rule {
+    LambdaDef ~ WhiteSpace ~ VariableName ~> (v => v) ~ WhiteSpace ~
+      LambdaParams ~ WhiteSpace ~ "=>" ~ WhiteSpace ~ LambdaBody ~ EOL ~~> LambdaMethodNode
+  }
+
+  def LambdaParams: Rule1[List[VariableNode]] = rule {
+    "(" ~ zeroOrMore(optional(WhiteSpace) ~ Variable) ~ optional(WhiteSpace) ~ ")"
+  }
+
+  def LambdaBody: Rule1[AstNode] = rule {
+    Operand ~ WhiteSpace ~ PlusOperator ~ WhiteSpace ~ Operand ~~> PlusExpressionNode |
+      Operand ~ WhiteSpace ~ MinusOperator ~ WhiteSpace ~ Operand ~~> MinusExpressionNode |
+      Operand ~ WhiteSpace ~ MultiplicationOperator ~ WhiteSpace ~ Operand ~~> MultiplicationExpressionNode |
+      Operand ~ WhiteSpace ~ DivisionOperator ~ WhiteSpace ~ Operand ~~> DivisionExpressionNode |
+      Operand ~ WhiteSpace ~ Modulo ~ WhiteSpace ~ Operand ~~> ModuloExpressionNode |
+      Operand
   }
 
   def MainMethod: Rule1[AbstractMethodNode] = rule {
@@ -355,7 +375,9 @@ class ArnoldParser extends Parser {
   def Operand: Rule1[OperandNode] = rule {
     Number | ArrayAccessOperand | ArrayLengthOperand | MathOperand | StringIntFunction |
       (TimeNow ~ push(TimeNode())) | (FileExists ~ WhiteSpace ~ StringOperand ~~> FileExistsNode) |
-      ThisFieldAccessOperand | FieldAccessOperand | Variable | Boolean
+      ThisFieldAccessOperand | FieldAccessOperand |
+      (FunctionRef ~ WhiteSpace ~ VariableName ~> (v => v) ~~> FunctionRefNode) |
+      Variable | Boolean
   }
 
   def ThisFieldAccessOperand: Rule1[OperandNode] = rule {
