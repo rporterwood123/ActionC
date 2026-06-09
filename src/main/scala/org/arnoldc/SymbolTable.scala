@@ -5,12 +5,22 @@ import org.parboiled.errors.ParsingException
 import org.objectweb.asm.Opcodes._
 import org.objectweb.asm.Label
 
+// Metadata about a declared class, used during code generation for field
+// resolution and inheritance. All fields are integers (per the OOP-lite design).
+case class ClassMetadata(name: String, parent: Option[String], fields: Set[String],
+                         methods: Map[String, MethodInformation])
+
 case class SymbolTable(upperLevel: Option[SymbolTable], currentMethod: String) {
 
   val FirstSymbolTableAddress = 0
   private val variableTable = new mutable.HashMap[String, Integer]()
   private val typeTable = new mutable.HashMap[String, VariableType]()
   private val methodTable = new mutable.HashMap[String, MethodInformation]()
+  private val classRegistry = new mutable.HashMap[String, ClassMetadata]()
+
+  // The class whose instance method/constructor is currently being generated, if
+  // any. When set, `this` is at local slot 0 and bare names may resolve to fields.
+  var currentClass: Option[String] = None
 
   // Stack of (continueLabel, breakLabel) for the enclosing loops, innermost last.
   // Used by GET OUT (break) and KEEP MOVING (continue).
@@ -71,6 +81,38 @@ case class SymbolTable(upperLevel: Option[SymbolTable], currentMethod: String) {
       }
       upperLevel.get.getVariableAddress(variableName)
     })
+  }
+
+  // --- Class registry (stored on the root table; child tables delegate up) ---
+
+  def registerClass(meta: ClassMetadata): Unit = upperLevel match {
+    case Some(parent) => parent.registerClass(meta)
+    case None => classRegistry.put(meta.name, meta)
+  }
+
+  def lookupClass(name: String): Option[ClassMetadata] =
+    classRegistry.get(name).orElse(upperLevel.flatMap(_.lookupClass(name)))
+
+  // All field names reachable on a class: its own fields plus inherited ones.
+  def reachableFields(className: String): Set[String] = lookupClass(className) match {
+    case Some(meta) => meta.fields ++ meta.parent.map(reachableFields).getOrElse(Set.empty)
+    case None => Set.empty
+  }
+
+  // Is `name` a field of the class whose method we're currently generating?
+  def isFieldOfCurrentClass(name: String): Boolean =
+    currentClass.exists(cn => reachableFields(cn).contains(name))
+
+  // Resolve a method on a class, walking up the inheritance chain.
+  def resolveMethod(className: String, methodName: String): Option[MethodInformation] =
+    lookupClass(className).flatMap { meta =>
+      meta.methods.get(methodName).orElse(meta.parent.flatMap(resolveMethod(_, methodName)))
+    }
+
+  // The class name of an object-typed variable (for field/method dispatch).
+  def getObjectClassName(variableName: String): String = getVariableType(variableName) match {
+    case VariableType.ObjectType(className) => className
+    case other => throw new ParsingException("VARIABLE " + variableName + " IS NOT AN OBJECT (" + other + ")")
   }
 
   def putMethod(methodName: String, methodInformation: MethodInformation) = {

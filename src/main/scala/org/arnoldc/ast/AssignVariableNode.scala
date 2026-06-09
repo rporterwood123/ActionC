@@ -6,8 +6,16 @@ import org.objectweb.asm.Opcodes._
 
 case class AssignVariableNode(variable: String, expression: AstNode) extends StatementNode {
   def generate(mv: MethodVisitor, symbolTable: SymbolTable) {
-    val variableAddress = symbolTable.getVariableAddress(variable)
-    expression.generate(mv, symbolTable)
-    mv.visitVarInsn(ISTORE, variableAddress)
+    // A bare name that is not a local but is a field of the current class assigns
+    // to this.field (PUTFIELD); otherwise it is a normal local store.
+    if (!symbolTable.containsVariable(variable) && symbolTable.isFieldOfCurrentClass(variable)) {
+      mv.visitVarInsn(ALOAD, 0)
+      expression.generate(mv, symbolTable)
+      mv.visitFieldInsn(PUTFIELD, symbolTable.currentClass.get, variable, "I")
+    } else {
+      val variableAddress = symbolTable.getVariableAddress(variable)
+      expression.generate(mv, symbolTable)
+      mv.visitVarInsn(symbolTable.getVariableType(variable).storeOpcode, variableAddress)
+    }
   }
 }

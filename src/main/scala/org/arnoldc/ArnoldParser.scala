@@ -51,6 +51,18 @@ class ArnoldParser extends Parser {
   val BitwiseXor = "FRIEND OR FOE"
   val LeftShift = "MOVE IT"
   val RightShift = "FALL BACK"
+  val ClassStart = "MY NAME IS MAXIMUS"
+  val ClassEnd = "STRENGTH AND HONOR"
+  val Inherits = "LIKE FATHER LIKE SON"
+  val PublicField = "OPEN TO THE PUBLIC"
+  val PrivateField = "THAT'S CLASSIFIED"
+  val ConstructorStart = "IT'S ALIVE"
+  val ConstructorEnd = "BIRTH COMPLETE"
+  val NewInstance = "WELCOME TO EARTH"
+  val As = "AS"
+  val This = "LOOK AT ME"
+  val InstanceMethodStart = "COMMANDER IN CHIEF"
+  val InstanceMethodEnd = "DISMISSED SOLDIER"
   val Increment = "ONE MORE TIME"
   val Decrement = "COUNTDOWN"
   val ForStart = "LET'S ROCK"
@@ -119,7 +131,32 @@ class ArnoldParser extends Parser {
   val WhiteSpace = oneOrMore(" " | "\t")
 
   def Root: Rule1[RootNode] = rule {
-    oneOrMore(AbstractMethod) ~ EOI ~~> RootNode
+    optional(EOL) ~ zeroOrMore(ClassDefinition) ~ oneOrMore(AbstractMethod) ~ EOI ~~> RootNode
+  }
+
+  def ClassDefinition: Rule1[ClassDefNode] = rule {
+    ClassStart ~ WhiteSpace ~ VariableName ~> (v => v) ~
+      optional(WhiteSpace ~ Inherits ~ WhiteSpace ~ VariableName ~> (v => v)) ~ EOL ~
+      zeroOrMore(FieldDeclaration) ~
+      optional(ConstructorDefinition) ~
+      zeroOrMore(InstanceMethodDefinition) ~
+      ClassEnd ~ optional(EOL) ~~> ClassDefNode
+  }
+
+  def FieldDeclaration: Rule1[FieldNode] = rule {
+    PublicField ~ WhiteSpace ~ VariableName ~> (v => FieldNode(v, true)) ~ EOL |
+      PrivateField ~ WhiteSpace ~ VariableName ~> (v => FieldNode(v, false)) ~ EOL
+  }
+
+  def ConstructorDefinition: Rule1[List[StatementNode]] = rule {
+    ConstructorStart ~ EOL ~ zeroOrMore(Statement) ~ ConstructorEnd ~ EOL
+  }
+
+  def InstanceMethodDefinition: Rule1[InstanceMethodNode] = rule {
+    InstanceMethodStart ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~
+      zeroOrMore(MethodArguments ~ WhiteSpace ~ Variable ~ EOL) ~
+      (NonVoidMethod | "") ~> ((m: String) => m == NonVoidMethod) ~ optional(EOL) ~
+      zeroOrMore(Statement) ~ InstanceMethodEnd ~ EOL ~~> InstanceMethodNode
   }
 
   def AbstractMethod: Rule1[AbstractMethodNode] = rule {
@@ -139,6 +176,8 @@ class ArnoldParser extends Parser {
 
   def Statement: Rule1[StatementNode] = rule {
     DeclareIntStatement | PrintStatement |
+      NewInstanceStatement | ThisFieldAssignStatement | FieldAssignStatement |
+      InstanceMethodCallStatement |
       AssignVariableStatement | ConditionStatement |
       WhileStatement | CallMethodStatement | ReturnStatement | CallReadMethodStatement |
       IncrementStatement | DecrementStatement | ForLoopStatement |
@@ -255,6 +294,26 @@ class ArnoldParser extends Parser {
     Decrement ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~~> DecrementNode
   }
 
+  def NewInstanceStatement: Rule1[StatementNode] = rule {
+    NewInstance ~ WhiteSpace ~ VariableName ~> (v => v) ~ WhiteSpace ~ As ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~~> NewInstanceNode
+  }
+
+  def ThisFieldAssignStatement: Rule1[StatementNode] = rule {
+    AssignVariable ~ WhiteSpace ~ This ~ "." ~ VariableName ~> (v => v) ~ EOL ~
+      Expression ~ EndAssignVariable ~ EOL ~~> ThisFieldAssignNode
+  }
+
+  def FieldAssignStatement: Rule1[StatementNode] = rule {
+    AssignVariable ~ WhiteSpace ~ VariableName ~> (v => v) ~ "." ~ VariableName ~> (v => v) ~ EOL ~
+      Expression ~ EndAssignVariable ~ EOL ~~> FieldAssignNode
+  }
+
+  def InstanceMethodCallStatement: Rule1[StatementNode] = rule {
+    (AssignVariableFromMethodCall ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL | "" ~> (v => v)) ~
+      CallMethod ~ WhiteSpace ~ VariableName ~> (v => v) ~ "." ~ VariableName ~> (v => v) ~
+      zeroOrMore(WhiteSpace ~ Operand) ~ EOL ~~> InstanceMethodCallNode
+  }
+
   def CallMethodStatement: Rule1[StatementNode] = rule {
     (AssignVariableFromMethodCall ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL | "" ~> (v => v)) ~
       CallMethod ~ WhiteSpace ~ VariableName ~> (v => v) ~
@@ -296,7 +355,15 @@ class ArnoldParser extends Parser {
   def Operand: Rule1[OperandNode] = rule {
     Number | ArrayAccessOperand | ArrayLengthOperand | MathOperand | StringIntFunction |
       (TimeNow ~ push(TimeNode())) | (FileExists ~ WhiteSpace ~ StringOperand ~~> FileExistsNode) |
-      Variable | Boolean
+      ThisFieldAccessOperand | FieldAccessOperand | Variable | Boolean
+  }
+
+  def ThisFieldAccessOperand: Rule1[OperandNode] = rule {
+    This ~ "." ~ VariableName ~> (v => v) ~~> ThisFieldAccessNode
+  }
+
+  def FieldAccessOperand: Rule1[OperandNode] = rule {
+    VariableName ~> (v => v) ~ "." ~ VariableName ~> (v => v) ~~> FieldAccessNode
   }
 
   def StringIntFunction: Rule1[OperandNode] = rule {

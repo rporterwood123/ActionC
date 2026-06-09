@@ -23,7 +23,7 @@ class InputTest extends ArnoldGeneratorTest{
 
   override val byteCodeExecutor = new ByteCodeExecutor{
 
-    override def getOutput(bytecode: Array[Byte], className: String): String = {
+    override def getOutput(classes: Map[String, Array[Byte]], className: String): String = {
 
       val originalIn = System.in
       val outputRedirectionStream = new ByteArrayOutputStream()
@@ -32,7 +32,7 @@ class InputTest extends ArnoldGeneratorTest{
       System.setIn(fileInput)
 
       try {
-        invokeMainMethod(bytecode, className)
+        invokeMainMethod(classes, className)
       } finally {
         System.setOut(originalOutputStream)
         System.setIn(originalIn)

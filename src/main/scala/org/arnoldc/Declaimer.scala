@@ -15,7 +15,7 @@ object Declaimer {
   def say(text: String) = SpeechUtils.doSpeak(text + "!\n")
 
   def declaim(node: AstNode): Unit = node match {
-    case RootNode(methods) => methods.map(m => declaim(m))
+    case RootNode(_, methods) => methods.map(m => declaim(m))
     case MainMethodNode(stmts) =>
       say(p.BeginMain)
       stmts foreach declaim

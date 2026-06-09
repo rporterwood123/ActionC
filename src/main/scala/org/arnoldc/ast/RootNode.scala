@@ -4,11 +4,17 @@ import org.objectweb.asm.Opcodes._
 import org.objectweb.asm.{MethodVisitor, ClassWriter}
 import org.arnoldc.{MethodInformation, SymbolTable}
 
-case class RootNode(methods: List[AbstractMethodNode]) extends AstNode {
+case class RootNode(classes: List[ClassDefNode], methods: List[AbstractMethodNode]) extends AstNode {
 
-  def generateByteCode(filename: String): Array[Byte] = {
+  def generateByteCode(filename: String): Map[String, Array[Byte]] = {
     val globalSymbols = storeMethodSignatures(filename)
-    generateClass(filename, globalSymbols).toByteArray
+    // Register class metadata before generating any bodies, so field/method
+    // resolution (including inheritance) works during code generation.
+    classes.foreach(c => globalSymbols.registerClass(c.metadata))
+
+    val mainClass = Map(filename -> generateClass(filename, globalSymbols).toByteArray)
+    val classFiles = classes.map(c => c.className -> c.generateClass(globalSymbols)).toMap
+    mainClass ++ classFiles
   }
 
   def generate(mv: MethodVisitor, symbolTable: SymbolTable) {
