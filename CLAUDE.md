@@ -50,8 +50,10 @@ state — keep it that way.
 All language tiers are **implemented and tested**: comments, the full
 comparison/bitwise/logical operator set, for/break/continue/switch, strings, floats,
 int arrays, error handling, the math/string/time/file stdlib, OOP with inheritance and
-instance methods, lambdas + function references, and async. **`sbt test` →
-175 passing, 0 failing, 28 suites.** `sbt assembly` produces a runnable jar.
+instance methods, lambdas + function references, and async. Float **arithmetic**
+(`+ − × ÷ %` with int→float promotion), `floor`/`ceil`/`round`, and numeric↔string
+conversions landed in the Tier 1 numerics pass. **`sbt test` →
+187 passing, 0 failing, 31 suites.** `sbt assembly` produces a runnable jar.
 
 The implementation roadmap (`TODO.md`) has been removed now that all tiers are done;
 treat the verified test run as ground truth, and this file as the live guide.
@@ -128,10 +130,16 @@ tier was built:
 
 ## Deliberately deferred (don't assume these exist)
 
-Float arithmetic & float-typed math (floor/ceil/round), trig (`IT'S ALL IN THE
-REFLEXES` — ambiguous one-keyword→sin/cos/tan mapping), an explicit boolean type,
-null/`@THERE IS NO SPOON`, string `split`/`replace`, file modes/handles, and
-`setTimeout`/`elapsed`. The author-facing subset is restated in Part 2 below.
+Trig (`IT'S ALL IN THE REFLEXES` — ambiguous one-keyword→sin/cos/tan mapping), an
+explicit boolean type, null/`@THERE IS NO SPOON`, string `split`/`replace`, file
+modes/handles, and `setTimeout`/`elapsed`. The author-facing subset is restated in
+Part 2 below.
+
+Float arithmetic and `floor`/`ceil`/`round` are **no longer deferred** — see the Tier 1
+numerics work. `floor`/`ceil`/`round` take a float and return an int (they double as
+float→int truncation); `SPELL IT OUT` stringifies an int or float; `DO THE MATH` parses
+a string to an int. Mixed int/float arithmetic promotes the int side via `I2F`
+(`TypeInference.scala`).
 
 ---
 
@@ -225,7 +233,12 @@ stdlib, classes with constructors and inheritance, instance methods + `this`
 - **Object fields are int-only.** No string/float/object fields.
 - **Lambdas** are top-level (declared like functions, not nested in `IT'S SHOWTIME`),
   and their body uses **infix** arithmetic: `CALL ME SNAKE double (x) => x YOU'RE FIRED 2`.
-- **Floats** support declare / init / print only — no float arithmetic or
-  floor/ceil/round yet.
+- **Floats** support full arithmetic now (`GET UP`/`GET DOWN`/`YOU'RE FIRED`/`HE HAD TO
+  SPLIT`/`I LET HIM GO` in an assignment block). Mixing an int into a float expression
+  promotes the int automatically; a pure-int expression assigned into a float variable
+  is coerced. `HIT THE FLOOR` / `THROUGH THE ROOF` / `ROUND THEM UP` take a float and
+  return an int (also the way to truncate float→int).
+- **Convert numbers and strings:** `SPELL IT OUT <n>` turns an int or float into a
+  string (for printing/concatenation); `DO THE MATH <str>` parses a string to an int.
 - **Not implemented:** explicit boolean type, null, string `split`/`replace`, trig,
   file modes/handles. If you reach for one and it won't parse, that's why.

@@ -138,9 +138,20 @@ sbt test
 | **Random** | `GO AHEAD MAKE MY DAY` | Dirty Harry |
 | **Absolute Value** | `NO MORE HALF MEASURES` | Breaking Bad |
 | **Square Root** | `GET TO THE ROOT OF` | Pun |
-| **Floor** | `HIT THE FLOOR` | Various |
-| **Ceiling** | `THROUGH THE ROOF` | Various |
+| **Floor** (float→int) | `HIT THE FLOOR` | Various |
+| **Ceiling** (float→int) | `THROUGH THE ROOF` | Various |
+| **Round** (float→int) | `ROUND THEM UP` | Various |
 | **Sin/Cos/Tan** | `IT'S ALL IN THE REFLEXES` | Big Trouble in Little China |
+
+Floats support full arithmetic (`GET UP`/`GET DOWN`/`YOU'RE FIRED`/`HE HAD TO SPLIT`/`I
+LET HIM GO`) inside an assignment block; mixing an int into a float expression promotes
+it automatically.
+
+### Conversions
+| Feature | Keyword | Movie |
+|---------|---------|-------|
+| **Number → String** | `SPELL IT OUT` | Various |
+| **String → Int** | `DO THE MATH` | Various |
 
 ### String Functions
 | Feature | Keyword | Movie |

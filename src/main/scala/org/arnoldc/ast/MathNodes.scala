@@ -65,3 +65,32 @@ case class RandomNode(bound: OperandNode) extends OperandNode {
     mv.visitInsn(D2I)
   }
 }
+
+// HIT THE FLOOR <f>  -> (int) floor(f). Doubles as a float->int (truncate-toward
+// -inf) conversion. The argument is promoted to float if it is an int.
+case class FloorNode(arg: OperandNode) extends OperandNode {
+  def generate(mv: MethodVisitor, symbolTable: SymbolTable) {
+    TypeInference.generateAsFloat(arg, mv, symbolTable)
+    mv.visitInsn(F2D)
+    mv.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "floor", "(D)D")
+    mv.visitInsn(D2I)
+  }
+}
+
+// THROUGH THE ROOF <f>  -> (int) ceil(f)
+case class CeilNode(arg: OperandNode) extends OperandNode {
+  def generate(mv: MethodVisitor, symbolTable: SymbolTable) {
+    TypeInference.generateAsFloat(arg, mv, symbolTable)
+    mv.visitInsn(F2D)
+    mv.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "ceil", "(D)D")
+    mv.visitInsn(D2I)
+  }
+}
+
+// ROUND THEM UP <f>  -> round(f) to nearest int (half up)
+case class RoundNode(arg: OperandNode) extends OperandNode {
+  def generate(mv: MethodVisitor, symbolTable: SymbolTable) {
+    TypeInference.generateAsFloat(arg, mv, symbolTable)
+    mv.visitMethodInsn(INVOKESTATIC, "java/lang/Math", "round", "(F)I")
+  }
+}

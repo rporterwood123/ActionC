@@ -32,6 +32,19 @@ case class TrimNode(str: AstNode) extends OperandNode {
   }
 }
 
+// SPELL IT OUT <n>  -> String.valueOf(n). Type-aware: floats use the float overload
+// so they stringify as e.g. "3.5"; everything else uses the int overload.
+case class NumToStringNode(arg: OperandNode) extends OperandNode {
+  def generate(mv: MethodVisitor, symbolTable: SymbolTable) {
+    arg.generate(mv, symbolTable)
+    if (TypeInference.isFloat(arg, symbolTable)) {
+      mv.visitMethodInsn(INVOKESTATIC, "java/lang/String", "valueOf", "(F)Ljava/lang/String;")
+    } else {
+      mv.visitMethodInsn(INVOKESTATIC, "java/lang/String", "valueOf", "(I)Ljava/lang/String;")
+    }
+  }
+}
+
 // GIVE ME A PIECE OF <str> FROM <begin> TO <end>  -> str.substring(begin, end)
 case class SubstringNode(str: AstNode, begin: OperandNode, end: OperandNode) extends OperandNode {
   def generate(mv: MethodVisitor, symbolTable: SymbolTable) {
@@ -58,6 +71,14 @@ case class ContainsNode(str: AstNode, sub: AstNode) extends OperandNode {
     str.generate(mv, symbolTable)
     sub.generate(mv, symbolTable)
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/String", "contains", "(Ljava/lang/CharSequence;)Z")
+  }
+}
+
+// DO THE MATH <str>  -> Integer.parseInt(str)
+case class ParseIntNode(str: AstNode) extends OperandNode {
+  def generate(mv: MethodVisitor, symbolTable: SymbolTable) {
+    str.generate(mv, symbolTable)
+    mv.visitMethodInsn(INVOKESTATIC, "java/lang/Integer", "parseInt", "(Ljava/lang/String;)I")
   }
 }
 
