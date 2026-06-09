@@ -63,6 +63,12 @@ class ArnoldParser extends Parser {
   val SwitchCase = "WHAT IF I TOLD YOU"
   val SwitchDefault = "SAME OLD SAME OLD"
   val SwitchEnd = "FINISH HIM"
+  val Assert = "I AM THE LAW"
+  val TryStart = "LET'S SEE WHAT YOU'VE GOT"
+  val Throw = "WELCOME TO THE PARTY PAL"
+  val Catch = "GOTCHA"
+  val Finally = "CLEAN UP ON AISLE FIVE"
+  val TryEnd = "THAT'S A WRAP"
   val DeclareArray = "I AIN'T GOT TIME TO BLEED"
   val ArraySize = "UGLY MOTHERFUCKERS"
   val ArrayWith = "WITH"
@@ -116,7 +122,23 @@ class ArnoldParser extends Parser {
       IncrementStatement | DecrementStatement | ForLoopStatement |
       BreakStatement | ContinueStatement | SwitchStatement |
       StringDeclareStatement | FloatDeclareStatement |
-      ArrayDeclareStatement | ArrayAssignStatement
+      ArrayDeclareStatement | ArrayAssignStatement |
+      TryStatement | ThrowStatement | AssertStatement
+  }
+
+  def AssertStatement: Rule1[StatementNode] = rule {
+    Assert ~ WhiteSpace ~ Operand ~ optional(WhiteSpace ~ "\"" ~ String ~ "\"") ~ EOL ~~> AssertNode
+  }
+
+  def TryStatement: Rule1[StatementNode] = rule {
+    TryStart ~ EOL ~ zeroOrMore(Statement) ~
+      Catch ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~ zeroOrMore(Statement) ~
+      optional(Finally ~ EOL ~ zeroOrMore(Statement)) ~
+      TryEnd ~ EOL ~~> TryNode
+  }
+
+  def ThrowStatement: Rule1[StatementNode] = rule {
+    Throw ~ WhiteSpace ~ StringOperand ~ EOL ~~> ThrowNode
   }
 
   def ArrayDeclareStatement: Rule1[StatementNode] = rule {
