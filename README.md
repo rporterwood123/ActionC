@@ -11,8 +11,8 @@ ActionC is an esoteric programming language based on iconic one-liners from acti
 > arrays, error handling, the math/string/time/file stdlib, OOP with inheritance and
 > instance methods, lambdas, and async) compile to JVM bytecode and run. **175 tests
 > pass** and `sbt assembly` builds a runnable `ActionC.jar`. A few spec items are
-> deliberately deferred or adjusted — see the "Documented deviations" section of
-> [TODO.md](TODO.md) (e.g. conditions take a pre-computed boolean, not an inline
+> deliberately deferred or adjusted — see the "Deliberately deferred" notes in
+> [CLAUDE.md](CLAUDE.md) (e.g. conditions take a pre-computed boolean, not an inline
 > comparison; lambda bodies use infix arithmetic; fields are int).
 
 ## Build & run
@@ -680,7 +680,7 @@ ActionC is fully backwards compatible with ArnoldC. All existing `.arnoldc` prog
 ## Documentation
 
 - **[ACTIONC_SPEC.md](ACTIONC_SPEC.md)** — Complete language specification with grammar
-- **[TODO.md](TODO.md)** — Implementation roadmap and progress
+- **[CLAUDE.md](CLAUDE.md)** — Compiler-internals guide + portable guide to writing ActionC programs
 - **[EVALUATION.md](EVALUATION.md)** — Analysis of original ArnoldC limitations
 
 ---

@@ -53,11 +53,8 @@ int arrays, error handling, the math/string/time/file stdlib, OOP with inheritan
 instance methods, lambdas + function references, and async. **`sbt test` →
 175 passing, 0 failing, 28 suites.** `sbt assembly` produces a runnable jar.
 
-> ⚠️ **Doc-hygiene warning.** The lower half of `TODO.md` still contains a stale
-> section claiming "Compiler Implementation: 0% — still vanilla ArnoldC, 33 AST nodes."
-> That is **outdated and false** — there are 55 AST nodes on disk and 175 tests pass.
-> Trust the test run and the top of `TODO.md`, not that tail. If you touch `TODO.md`,
-> delete the contradiction rather than propagating it.
+The implementation roadmap (`TODO.md`) has been removed now that all tiers are done;
+treat the verified test run as ground truth, and this file as the live guide.
 
 ## Architecture: the pipeline
 
@@ -134,7 +131,7 @@ tier was built:
 Float arithmetic & float-typed math (floor/ceil/round), trig (`IT'S ALL IN THE
 REFLEXES` — ambiguous one-keyword→sin/cos/tan mapping), an explicit boolean type,
 null/`@THERE IS NO SPOON`, string `split`/`replace`, file modes/handles, and
-`setTimeout`/`elapsed`. Full list: "Documented deviations" in `TODO.md`.
+`setTimeout`/`elapsed`. The author-facing subset is restated in Part 2 below.
 
 ---
 

@@ -7,8 +7,8 @@
 > ✅ **Implementation status (2026-06-09): implemented.** The features in this spec
 > compile to JVM bytecode and run (175 passing tests). The "(PLANNED — NOT BUILT)"
 > markers below are now historical — treat them as "implemented" except for the
-> deliberately deferred/adjusted items listed under "Documented deviations" in
-> [TODO.md](TODO.md) (notably: conditions take a single pre-computed boolean rather
+> deliberately deferred/adjusted items listed under "Deliberately deferred" in
+> [CLAUDE.md](CLAUDE.md) (notably: conditions take a single pre-computed boolean rather
 > than an inline comparison; lambda bodies use infix arithmetic; fields are int;
 > trig and explicit boolean/null types are not wired).
 

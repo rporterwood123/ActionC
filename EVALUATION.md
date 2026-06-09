@@ -158,5 +158,5 @@ the compiled `ActionC.jar`).
 | Lambdas / async | Not supported | Lambdas, function refs, async blocks | ✅ |
 
 A few spec items are deliberately deferred or adjusted (trig, explicit boolean/null
-types, inline comparisons in conditions, float arithmetic) — see the "Documented
-deviations" section of [TODO.md](TODO.md).
+types, inline comparisons in conditions, float arithmetic) — see the "Deliberately
+deferred" notes in [CLAUDE.md](CLAUDE.md).
