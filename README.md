@@ -162,6 +162,11 @@ it automatically.
 | **Lowercase** | `KEEP YOUR VOICE DOWN` | Various |
 | **Trim** | `CUT THE FAT FROM` | Various |
 | **Contains** | `YOU TALKING TO ME ABOUT` | Taxi Driver |
+| **Replace** | `GET A NEW ONE` | Various |
+| **Starts With** | `FIRST BLOOD` | Rambo |
+| **Ends With** | `LAST MAN STANDING` | Various |
+| **Char At** (→ 1-char string) | `SHOW ME THE ONE AT` | Various |
+| **Reverse** | `PUT IT IN REVERSE` | Various |
 
 ### Time Functions
 | Feature | Keyword | Movie |

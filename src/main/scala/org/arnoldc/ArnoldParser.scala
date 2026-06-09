@@ -124,6 +124,11 @@ class ArnoldParser extends Parser {
   val StrIndexOf = "WHERE IS IT IN"
   val NumToString = "SPELL IT OUT"
   val ParseInt = "DO THE MATH"
+  val StrReplace = "GET A NEW ONE"
+  val StrStartsWith = "FIRST BLOOD"
+  val StrEndsWith = "LAST MAN STANDING"
+  val StrCharAt = "SHOW ME THE ONE AT"
+  val StrReverse = "PUT IT IN REVERSE"
 
   val SingleLineComment = "I'M BATMAN"
   val BlockCommentStart = "GATHER ROUND"
@@ -288,6 +293,9 @@ class ArnoldParser extends Parser {
 
   def StringFunction: Rule1[OperandNode] = rule {
     NumToString ~ WhiteSpace ~ Operand ~~> NumToStringNode |
+      StrReplace ~ WhiteSpace ~ StringOperand ~ WhiteSpace ~ StringOperand ~ WhiteSpace ~ StringOperand ~~> ReplaceNode |
+      StrCharAt ~ WhiteSpace ~ StringOperand ~ WhiteSpace ~ Operand ~~> CharAtNode |
+      StrReverse ~ WhiteSpace ~ StringOperand ~~> ReverseNode |
       StrUpper ~ WhiteSpace ~ StringOperand ~~> UpperNode |
       StrLower ~ WhiteSpace ~ StringOperand ~~> LowerNode |
       StrTrim ~ WhiteSpace ~ StringOperand ~~> TrimNode |
@@ -409,6 +417,8 @@ class ArnoldParser extends Parser {
 
   def StringIntFunction: Rule1[OperandNode] = rule {
     ParseInt ~ WhiteSpace ~ StringOperand ~~> ParseIntNode |
+      StrStartsWith ~ WhiteSpace ~ StringOperand ~ WhiteSpace ~ StringOperand ~~> StartsWithNode |
+      StrEndsWith ~ WhiteSpace ~ StringOperand ~ WhiteSpace ~ StringOperand ~~> EndsWithNode |
       StrLength ~ WhiteSpace ~ StringOperand ~~> LengthNode |
       StrContains ~ WhiteSpace ~ StringOperand ~ WhiteSpace ~ StringOperand ~~> ContainsNode |
       StrIndexOf ~ WhiteSpace ~ StringOperand ~ WhiteSpace ~ StringOperand ~~> IndexOfNode
