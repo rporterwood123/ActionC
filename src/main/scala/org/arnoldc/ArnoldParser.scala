@@ -86,6 +86,9 @@ class ArnoldParser extends Parser {
   val MathMin = "MINIMAL CASUALTIES OF"
   val MathPow = "UNLIMITED POWER OF"
   val MathRandom = "GO AHEAD MAKE MY DAY"
+  val MathFloor = "HIT THE FLOOR"
+  val MathCeil = "THROUGH THE ROOF"
+  val MathRound = "ROUND THEM UP"
   val TimeNow = "WHAT TIME IS IT"
   val Sleep = "CHILL OUT FOR"
   val FileRead = "WHAT'S IN THE BOX"
@@ -119,6 +122,8 @@ class ArnoldParser extends Parser {
   val StrLength = "HOW LONG IS THIS THING"
   val StrContains = "YOU TALKING TO ME ABOUT"
   val StrIndexOf = "WHERE IS IT IN"
+  val NumToString = "SPELL IT OUT"
+  val ParseInt = "DO THE MATH"
 
   val SingleLineComment = "I'M BATMAN"
   val BlockCommentStart = "GATHER ROUND"
@@ -282,7 +287,8 @@ class ArnoldParser extends Parser {
   }
 
   def StringFunction: Rule1[OperandNode] = rule {
-    StrUpper ~ WhiteSpace ~ StringOperand ~~> UpperNode |
+    NumToString ~ WhiteSpace ~ Operand ~~> NumToStringNode |
+      StrUpper ~ WhiteSpace ~ StringOperand ~~> UpperNode |
       StrLower ~ WhiteSpace ~ StringOperand ~~> LowerNode |
       StrTrim ~ WhiteSpace ~ StringOperand ~~> TrimNode |
       StrSubstring ~ WhiteSpace ~ StringOperand ~ WhiteSpace ~
@@ -386,7 +392,7 @@ class ArnoldParser extends Parser {
   }
 
   def Operand: Rule1[OperandNode] = rule {
-    Number | ArrayAccessOperand | ArrayLengthOperand | MathOperand | StringIntFunction |
+    FloatLiteral | Number | ArrayAccessOperand | ArrayLengthOperand | MathOperand | StringIntFunction |
       (TimeNow ~ push(TimeNode())) | (FileExists ~ WhiteSpace ~ StringOperand ~~> FileExistsNode) |
       ThisFieldAccessOperand | FieldAccessOperand |
       (FunctionRef ~ WhiteSpace ~ VariableName ~> (v => v) ~~> FunctionRefNode) |
@@ -402,7 +408,8 @@ class ArnoldParser extends Parser {
   }
 
   def StringIntFunction: Rule1[OperandNode] = rule {
-    StrLength ~ WhiteSpace ~ StringOperand ~~> LengthNode |
+    ParseInt ~ WhiteSpace ~ StringOperand ~~> ParseIntNode |
+      StrLength ~ WhiteSpace ~ StringOperand ~~> LengthNode |
       StrContains ~ WhiteSpace ~ StringOperand ~ WhiteSpace ~ StringOperand ~~> ContainsNode |
       StrIndexOf ~ WhiteSpace ~ StringOperand ~ WhiteSpace ~ StringOperand ~~> IndexOfNode
   }
@@ -413,7 +420,10 @@ class ArnoldParser extends Parser {
       MathMax ~ WhiteSpace ~ Operand ~ WhiteSpace ~ Operand ~~> MaxNode |
       MathMin ~ WhiteSpace ~ Operand ~ WhiteSpace ~ Operand ~~> MinNode |
       MathPow ~ WhiteSpace ~ Operand ~ WhiteSpace ~ Operand ~~> PowNode |
-      MathRandom ~ WhiteSpace ~ Operand ~~> RandomNode
+      MathRandom ~ WhiteSpace ~ Operand ~~> RandomNode |
+      MathFloor ~ WhiteSpace ~ Operand ~~> FloorNode |
+      MathCeil ~ WhiteSpace ~ Operand ~~> CeilNode |
+      MathRound ~ WhiteSpace ~ Operand ~~> RoundNode
   }
 
   def ArrayAccessOperand: Rule1[OperandNode] = rule {
