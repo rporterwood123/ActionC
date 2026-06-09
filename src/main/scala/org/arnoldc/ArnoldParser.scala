@@ -58,6 +58,9 @@ class ArnoldParser extends Parser {
   val SwitchCase = "WHAT IF I TOLD YOU"
   val SwitchDefault = "SAME OLD SAME OLD"
   val SwitchEnd = "FINISH HIM"
+  val DeclareString = "I HAVE COME HERE TO CHEW BUBBLEGUM"
+  val StringAssign = "AND KICK ASS"
+  val EmptyString = "AND I'M ALL OUT OF BUBBLEGUM"
 
   val SingleLineComment = "I'M BATMAN"
   val BlockCommentStart = "GATHER ROUND"
@@ -98,7 +101,19 @@ class ArnoldParser extends Parser {
       AssignVariableStatement | ConditionStatement |
       WhileStatement | CallMethodStatement | ReturnStatement | CallReadMethodStatement |
       IncrementStatement | DecrementStatement | ForLoopStatement |
-      BreakStatement | ContinueStatement | SwitchStatement
+      BreakStatement | ContinueStatement | SwitchStatement |
+      StringDeclareStatement
+  }
+
+  def StringDeclareStatement: Rule1[StatementNode] = rule {
+    DeclareString ~ WhiteSpace ~ VariableName ~> (v => v) ~ EOL ~
+      oneOrMore(StringAssign ~ WhiteSpace ~ StringOperand ~ EOL) ~~> StringDeclareNode
+  }
+
+  def StringOperand: Rule1[OperandNode] = rule {
+    "\"" ~ String ~ "\"" |
+      EmptyString ~ push(StringNode("")) |
+      Variable
   }
 
   def SwitchStatement: Rule1[StatementNode] = rule {

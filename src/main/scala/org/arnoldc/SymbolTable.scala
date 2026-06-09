@@ -9,6 +9,7 @@ case class SymbolTable(upperLevel: Option[SymbolTable], currentMethod: String) {
 
   val FirstSymbolTableAddress = 0
   private val variableTable = new mutable.HashMap[String, Integer]()
+  private val typeTable = new mutable.HashMap[String, VariableType]()
   private val methodTable = new mutable.HashMap[String, MethodInformation]()
 
   // Stack of (continueLabel, breakLabel) for the enclosing loops, innermost last.
@@ -39,12 +40,24 @@ case class SymbolTable(upperLevel: Option[SymbolTable], currentMethod: String) {
     initialNextVarAddress + variableTable.size
   }
 
-  def putVariable(variableName: String) = {
+  def putVariable(variableName: String): Unit = putVariable(variableName, VariableType.IntType)
+
+  def putVariable(variableName: String, variableType: VariableType): Unit = {
     val newVarAddress = initialNextVarAddress + variableTable.size
     if (variableTable.contains(variableName)) {
       throw new ParsingException("DUPLICATE VARIABLE: " + variableName)
     }
     variableTable += (variableName -> newVarAddress)
+    typeTable += (variableName -> variableType)
+  }
+
+  def getVariableType(variableName: String): VariableType = {
+    typeTable.getOrElse(variableName, {
+      if (upperLevel.isEmpty) {
+        throw new ParsingException("VARIABLE: " + variableName + " NOT DECLARED!")
+      }
+      upperLevel.get.getVariableType(variableName)
+    })
   }
 
   def containsVariable(variableName: String): Boolean = {
