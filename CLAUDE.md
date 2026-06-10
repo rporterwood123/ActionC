@@ -54,8 +54,9 @@ instance methods, lambdas + function references, and async. Float **arithmetic**
 (`+ − × ÷ %` with int→float promotion), `floor`/`ceil`/`round`, and numeric↔string
 conversions landed in the Tier 1 numerics pass; Tier 2 added the string toolkit
 (`replace`, `startsWith`, `endsWith`, `charAt`, `reverse`); Tier 3 added typed arrays
-(float & string) and `split`. **`sbt test` →
-201 passing, 0 failing, 34 suites.** `sbt assembly` produces a runnable jar.
+(float & string) and `split`; a follow-up let `TALK TO THE HAND` print string-returning
+functions directly. **`sbt test` →
+205 passing, 0 failing, 35 suites.** `sbt assembly` produces a runnable jar.
 
 The implementation roadmap (`TODO.md`) has been removed now that all tiers are done;
 treat the verified test run as ground truth, and this file as the live guide.
@@ -253,6 +254,11 @@ stdlib, classes with constructors and inheritance, instance methods + `this`
   promotes the int automatically; a pure-int expression assigned into a float variable
   is coerced. `HIT THE FLOOR` / `THROUGH THE ROOF` / `ROUND THEM UP` take a float and
   return an int (also the way to truncate float→int).
+- **Float division gotcha:** an operand is promoted to float only when *some leaf in
+  that expression* is already a float — promotion happens per-expression, not at the
+  destination. So `7 HE HAD TO SPLIT 2` is **integer** division (`= 3`) even when stored
+  into a float variable; it only coerces to `3.0` at the store, never `3.5`. Write a
+  float literal (`7.0` or `2.0`) to force float division. This matches C/Java semantics.
 - **Convert numbers and strings:** `SPELL IT OUT <n>` turns an int or float into a
   string (for printing/concatenation); `DO THE MATH <str>` parses a string to an int.
 - **Arrays come in three element types.** Int (`I AIN'T GOT TIME TO BLEED`) and float
