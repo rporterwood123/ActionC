@@ -22,6 +22,12 @@ case class PrintNode(operand: AstNode) extends StatementNode {
         case VariableType.FloatType => "F"
         case _ => "I"
       }
+    case ArrayAccessNode(name, _) =>
+      symbolTable.getVariableType(name) match {
+        case VariableType.StringArrayType => "Ljava/lang/String;"
+        case VariableType.FloatArrayType => "F"
+        case _ => "I"
+      }
     case _ => "I"
   }
 }

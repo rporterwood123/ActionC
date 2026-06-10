@@ -53,8 +53,9 @@ int arrays, error handling, the math/string/time/file stdlib, OOP with inheritan
 instance methods, lambdas + function references, and async. Float **arithmetic**
 (`+ − × ÷ %` with int→float promotion), `floor`/`ceil`/`round`, and numeric↔string
 conversions landed in the Tier 1 numerics pass; Tier 2 added the string toolkit
-(`replace`, `startsWith`, `endsWith`, `charAt`, `reverse`). **`sbt test` →
-193 passing, 0 failing, 32 suites.** `sbt assembly` produces a runnable jar.
+(`replace`, `startsWith`, `endsWith`, `charAt`, `reverse`); Tier 3 added typed arrays
+(float & string) and `split`. **`sbt test` →
+201 passing, 0 failing, 34 suites.** `sbt assembly` produces a runnable jar.
 
 The implementation roadmap (`TODO.md`) has been removed now that all tiers are done;
 treat the verified test run as ground truth, and this file as the live guide.
@@ -132,9 +133,8 @@ tier was built:
 ## Deliberately deferred (don't assume these exist)
 
 Trig (`IT'S ALL IN THE REFLEXES` — ambiguous one-keyword→sin/cos/tan mapping), an
-explicit boolean type, null/`@THERE IS NO SPOON`, string `split` (needs string arrays),
-typed (string/float) arrays, file modes/handles, and `setTimeout`/`elapsed`. The
-author-facing subset is restated in Part 2 below.
+explicit boolean type, null/`@THERE IS NO SPOON`, file modes/handles, and
+`setTimeout`/`elapsed`. The author-facing subset is restated in Part 2 below.
 
 Float arithmetic and `floor`/`ceil`/`round` are **no longer deferred** — see the Tier 1
 numerics work. `floor`/`ceil`/`round` take a float and return an int (they double as
@@ -144,8 +144,15 @@ a string to an int. Mixed int/float arithmetic promotes the int side via `I2F`
 
 String `replace` (`GET A NEW ONE`), `startsWith` (`FIRST BLOOD`), `endsWith` (`LAST MAN
 STANDING`), `charAt` (`SHOW ME THE ONE AT`, returns a 1-char string), and `reverse`
-(`PUT IT IN REVERSE`) are **no longer deferred** — Tier 2. `split` is still deferred: it
-returns a string array, so it waits on typed-array support.
+(`PUT IT IN REVERSE`) are **no longer deferred** — Tier 2.
+
+Typed arrays are **no longer deferred** — Tier 3. Float arrays declare with `LOCK AND
+LOAD … WITH <n> UGLY MOTHERFUCKERS` (full read/write, int→float coercion on write);
+string arrays are produced by `split` = `DIVIDE AND CONQUER <name> <str> <delim>` (literal
+delimiter via `Pattern.quote`). `GET IN LINE … AT`, `HOW MANY OF THEM`, and (for floats)
+element writes dispatch on the array's element type via `ArrayVariableType`
+(`VariableType.scala`). Manual *string*-array element writes are deferred — `split` is the
+producer; reading elements and length are supported.
 
 ---
 
@@ -228,7 +235,8 @@ Booleans are ints: `@NO PROBLEMO` = true, `@I LIED` = false.
 Loops (`LET'S ROCK … FROM … TO … / GAME OVER MAN GAME OVER`, `STICK AROUND … CHILL`,
 `GET OUT` break, `KEEP MOVING` continue), switch (`CHOOSE YOUR DESTINY … FINISH HIM`,
 no fall-through), strings (declare/concat/length/upper/lower/trim/substring/contains/
-indexOf/replace/startsWith/endsWith/charAt/reverse), int arrays, try/catch/finally +
+indexOf/replace/startsWith/endsWith/charAt/reverse), int/float/string arrays (string
+arrays via `split`), try/catch/finally +
 throw + assert, the math/string/time/file
 stdlib, classes with constructors and inheritance, instance methods + `this`
 (`LOOK AT ME`), lambdas + function refs, and async (`COVER ME … MISSION COMPLETE`,
@@ -247,5 +255,10 @@ stdlib, classes with constructors and inheritance, instance methods + `this`
   return an int (also the way to truncate float→int).
 - **Convert numbers and strings:** `SPELL IT OUT <n>` turns an int or float into a
   string (for printing/concatenation); `DO THE MATH <str>` parses a string to an int.
-- **Not implemented:** explicit boolean type, null, string `split`/`replace`, trig,
-  file modes/handles. If you reach for one and it won't parse, that's why.
+- **Arrays come in three element types.** Int (`I AIN'T GOT TIME TO BLEED`) and float
+  (`LOCK AND LOAD`) arrays declare `WITH <n> UGLY MOTHERFUCKERS` and support read/write/
+  length. String arrays are produced by `split` (`DIVIDE AND CONQUER <name> <str>
+  <delim>`, literal delimiter) — read elements with `GET IN LINE … AT` and length with
+  `HOW MANY OF THEM`; writing individual string elements isn't supported yet.
+- **Not implemented:** explicit boolean type, null, trig, file modes/handles. If you
+  reach for one and it won't parse, that's why.

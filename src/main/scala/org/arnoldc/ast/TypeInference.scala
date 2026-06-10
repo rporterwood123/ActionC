@@ -18,6 +18,9 @@ object TypeInference {
       // Field-backed bare names (not local variables) are int-only by design.
       symbolTable.containsVariable(name) &&
         symbolTable.getVariableType(name) == VariableType.FloatType
+    case ArrayAccessNode(name, _) =>
+      symbolTable.containsVariable(name) &&
+        symbolTable.getVariableType(name) == VariableType.FloatArrayType
     case PlusExpressionNode(l, r) => isFloat(l, symbolTable) || isFloat(r, symbolTable)
     case MinusExpressionNode(l, r) => isFloat(l, symbolTable) || isFloat(r, symbolTable)
     case MultiplicationExpressionNode(l, r) => isFloat(l, symbolTable) || isFloat(r, symbolTable)

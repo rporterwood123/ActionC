@@ -290,6 +290,29 @@ IT'S SHOWTIME
 YOU HAVE BEEN TERMINATED
 ```
 
+**Float arrays** declare the same way with `LOCK AND LOAD` and support read/write/length
+(an int written into a float array is promoted automatically):
+
+```actionc
+LOCK AND LOAD temps WITH 3 UGLY MOTHERFUCKERS
+GET IN LINE temps AT 0
+HERE IS MY INVITATION 98.6
+ENOUGH TALK
+TALK TO THE HAND GET IN LINE temps AT 0      I'M BATMAN 98.6
+```
+
+**String arrays** are produced by `split` (`DIVIDE AND CONQUER <name> <str> <delim>`, the
+delimiter is literal). Read elements with `GET IN LINE … AT` and length with `HOW MANY OF
+THEM`:
+
+```actionc
+I HAVE COME HERE TO CHEW BUBBLEGUM csv
+AND KICK ASS "alpha,beta,gamma"
+DIVIDE AND CONQUER parts csv ","
+TALK TO THE HAND HOW MANY OF THEM parts       I'M BATMAN 3
+TALK TO THE HAND GET IN LINE parts AT 1       I'M BATMAN beta
+```
+
 ### Math Functions
 
 ```actionc
@@ -554,6 +577,8 @@ Task started
 |---------|---------|
 | `STICK AROUND` | While Loop |
 | `I AIN'T GOT TIME TO BLEED` | Declare Array |
+| `LOCK AND LOAD` | Declare Float Array |
+| `DIVIDE AND CONQUER` | Split String → Array |
 | `NEGATIVE` | Logical NOT |
 | `LOOK AT ME` | This Reference |
 
