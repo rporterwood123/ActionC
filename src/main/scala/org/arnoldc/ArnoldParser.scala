@@ -397,7 +397,7 @@ class ArnoldParser extends Parser {
   }
 
   def PrintStatement: Rule1[PrintNode] = rule {
-    Print ~ WhiteSpace ~ (Operand ~~> PrintNode | "\"" ~ String ~ "\"" ~~> PrintNode) ~ EOL
+    Print ~ WhiteSpace ~ (StringFunction ~~> PrintNode | Operand ~~> PrintNode | "\"" ~ String ~ "\"" ~~> PrintNode) ~ EOL
   }
 
   def DeclareIntStatement: Rule1[DeclareIntNode] = rule {

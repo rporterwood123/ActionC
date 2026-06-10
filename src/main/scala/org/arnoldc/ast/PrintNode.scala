@@ -28,6 +28,10 @@ case class PrintNode(operand: AstNode) extends StatementNode {
         case VariableType.FloatArrayType => "F"
         case _ => "I"
       }
+    // String-returning stdlib functions (printable directly, not just in concat).
+    case _: UpperNode | _: LowerNode | _: TrimNode | _: SubstringNode |
+         _: ReplaceNode | _: CharAtNode | _: ReverseNode | _: NumToStringNode =>
+      "Ljava/lang/String;"
     case _ => "I"
   }
 }
