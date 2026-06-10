@@ -12,6 +12,14 @@ sealed trait VariableType {
   def descriptor: String
 }
 
+// An array type also knows how to load/store its elements and its element's own
+// scalar type (used for int->float coercion and print/arithmetic dispatch).
+sealed trait ArrayVariableType extends VariableType {
+  def elementType: VariableType
+  def elementLoadOpcode: Int
+  def elementStoreOpcode: Int
+}
+
 object VariableType {
 
   case object IntType extends VariableType {
@@ -32,10 +40,31 @@ object VariableType {
     val descriptor = "Ljava/lang/String;"
   }
 
-  case object IntArrayType extends VariableType {
+  case object IntArrayType extends ArrayVariableType {
     val loadOpcode = ALOAD
     val storeOpcode = ASTORE
     val descriptor = "[I"
+    val elementType = IntType
+    val elementLoadOpcode = IALOAD
+    val elementStoreOpcode = IASTORE
+  }
+
+  case object FloatArrayType extends ArrayVariableType {
+    val loadOpcode = ALOAD
+    val storeOpcode = ASTORE
+    val descriptor = "[F"
+    val elementType = FloatType
+    val elementLoadOpcode = FALOAD
+    val elementStoreOpcode = FASTORE
+  }
+
+  case object StringArrayType extends ArrayVariableType {
+    val loadOpcode = ALOAD
+    val storeOpcode = ASTORE
+    val descriptor = "[Ljava/lang/String;"
+    val elementType = StringType
+    val elementLoadOpcode = AALOAD
+    val elementStoreOpcode = AASTORE
   }
 
   case class ObjectType(className: String) extends VariableType {

@@ -103,6 +103,8 @@ class ArnoldParser extends Parser {
   val Finally = "CLEAN UP ON AISLE FIVE"
   val TryEnd = "THAT'S A WRAP"
   val DeclareArray = "I AIN'T GOT TIME TO BLEED"
+  val DeclareFloatArray = "LOCK AND LOAD"
+  val Split = "DIVIDE AND CONQUER"
   val ArraySize = "UGLY MOTHERFUCKERS"
   val ArrayWith = "WITH"
   val ArrayAccess = "GET IN LINE"
@@ -216,7 +218,7 @@ class ArnoldParser extends Parser {
       IncrementStatement | DecrementStatement | ForLoopStatement |
       BreakStatement | ContinueStatement | SwitchStatement |
       StringDeclareStatement | FloatDeclareStatement |
-      ArrayDeclareStatement | ArrayAssignStatement |
+      ArrayDeclareStatement | FloatArrayDeclareStatement | SplitDeclareStatement | ArrayAssignStatement |
       TryStatement | ThrowStatement | AssertStatement | SleepStatement |
       WriteFileStatement | DeleteFileStatement |
       AsyncBlockStatement | AwaitStatement
@@ -263,6 +265,16 @@ class ArnoldParser extends Parser {
       ArrayWith ~ WhiteSpace ~ Operand ~ WhiteSpace ~ ArraySize ~ EOL ~~> ArrayDeclareNode
   }
 
+  def FloatArrayDeclareStatement: Rule1[StatementNode] = rule {
+    DeclareFloatArray ~ WhiteSpace ~ VariableName ~> (v => v) ~ WhiteSpace ~
+      ArrayWith ~ WhiteSpace ~ Operand ~ WhiteSpace ~ ArraySize ~ EOL ~~> FloatArrayDeclareNode
+  }
+
+  def SplitDeclareStatement: Rule1[StatementNode] = rule {
+    Split ~ WhiteSpace ~ VariableName ~> (v => v) ~ WhiteSpace ~
+      StringOperand ~ WhiteSpace ~ StringOperand ~ EOL ~~> SplitDeclareNode
+  }
+
   def ArrayAssignStatement: Rule1[StatementNode] = rule {
     ArrayAccess ~ WhiteSpace ~ VariableName ~> (v => v) ~ WhiteSpace ~
       ArrayAt ~ WhiteSpace ~ Operand ~ EOL ~
@@ -285,6 +297,7 @@ class ArnoldParser extends Parser {
 
   def StringOperand: Rule1[OperandNode] = rule {
     StringFunction |
+      ArrayAccessOperand |
       (FileRead ~ WhiteSpace ~ StringOperand ~~> ReadFileNode) |
       "\"" ~ String ~ "\"" |
       EmptyString ~ push(StringNode("")) |
