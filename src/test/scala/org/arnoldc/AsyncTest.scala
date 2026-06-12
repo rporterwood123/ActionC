@@ -18,6 +18,59 @@ class AsyncTest extends ArnoldGeneratorTest {
     getOutput(code) should equal("42\n")
   }
 
+  it should "complete the await even when the async block throws" in {
+    val code =
+      "IT'S SHOWTIME\n" +
+        "COVER ME job\n" +
+        "HEY CHRISTMAS TREE x\n" +
+        "YOU SET US UP 0\n" +
+        "GET TO THE CHOPPER x\n" +
+        "HERE IS MY INVITATION 1\n" +
+        "HE HAD TO SPLIT 0\n" +
+        "ENOUGH TALK\n" +
+        "I'LL BE BACK x\n" +
+        "MISSION COMPLETE\n" +
+        "HOLD THE LINE job\n" +
+        "TALK TO THE HAND \"after await\"\n" +
+        "YOU HAVE BEEN TERMINATED\n"
+    // Run on a watchdog thread: with the bug, HOLD THE LINE spins forever.
+    @volatile var output: Option[String] = None
+    val runner = new Thread(new Runnable { def run() { output = Some(getOutput(code)) } })
+    runner.setDaemon(true)
+    runner.start()
+    runner.join(10000)
+    withClue("await never completed after the async block threw: ") {
+      output should be(defined)
+    }
+    output.get should equal("after await\n")
+  }
+
+  it should "run async blocks on daemon threads so the JVM can exit without them" in {
+    val code =
+      "IT'S SHOWTIME\n" +
+        "COVER ME background\n" +
+        "CHILL OUT FOR 3000\n" +
+        "MISSION COMPLETE\n" +
+        "TALK TO THE HAND \"main done\"\n" +
+        "YOU HAVE BEEN TERMINATED\n"
+    getOutput(code) should equal("main done\n")
+
+    import scala.collection.JavaConverters._
+    def findAsyncThread: Option[Thread] =
+      Thread.getAllStackTraces.asScala.collectFirst {
+        case (t, frames) if frames.exists(_.getClassName.startsWith("Hello$async$")) => t
+      }
+    // The block sleeps for 3s, so its thread must still be findable right after main returns.
+    val deadline = System.currentTimeMillis + 2000
+    var found = findAsyncThread
+    while (found.isEmpty && System.currentTimeMillis < deadline) {
+      Thread.sleep(10)
+      found = findAsyncThread
+    }
+    withClue("could not locate the running async thread: ") { found should be(defined) }
+    found.get.isDaemon should be(true)
+  }
+
   it should "compute a result in the async block before awaiting" in {
     val code =
       "IT'S SHOWTIME\n" +

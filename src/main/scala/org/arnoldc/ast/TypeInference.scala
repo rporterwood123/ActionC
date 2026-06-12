@@ -34,4 +34,19 @@ object TypeInference {
     node.generate(mv, symbolTable)
     if (!isFloat(node, symbolTable)) mv.visitInsn(I2F)
   }
+
+  // Does this operand/expression evaluate to a String at runtime?
+  def isString(node: AstNode, symbolTable: SymbolTable): Boolean = node match {
+    case _: StringNode => true
+    case VariableNode(name) =>
+      symbolTable.containsVariable(name) &&
+        symbolTable.getVariableType(name) == VariableType.StringType
+    case ArrayAccessNode(name, _) =>
+      symbolTable.containsVariable(name) &&
+        symbolTable.getVariableType(name) == VariableType.StringArrayType
+    case _: UpperNode | _: LowerNode | _: TrimNode | _: SubstringNode |
+         _: ReplaceNode | _: CharAtNode | _: ReverseNode | _: NumToStringNode |
+         _: ReadFileNode => true
+    case _ => false
+  }
 }
