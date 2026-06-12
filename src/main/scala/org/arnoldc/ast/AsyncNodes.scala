@@ -42,6 +42,7 @@ case class AsyncBlockNode(name: String, body: List[StatementNode]) extends State
     val cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES)
     cw.visit(V1_7, ACC_PUBLIC + ACC_SUPER, asyncClassName, null, "java/lang/Object",
       Array("java/lang/Runnable"))
+    cw.visitSource(globalSymbols.getFileName() + ".actionc", null)
     cw.visitField(ACC_PUBLIC, "result", "I", null, null).visitEnd()
     cw.visitField(ACC_PUBLIC + ACC_VOLATILE, "done", "I", null, null).visitEnd()
 
@@ -59,7 +60,10 @@ case class AsyncBlockNode(name: String, body: List[StatementNode]) extends State
     // rethrown so the thread's default handler still reports it.
     val run = cw.visitMethod(ACC_PUBLIC, "run", "()V", null, null)
     run.visitCode()
-    val runSymbols = new SymbolTable(Some(globalSymbols), "run")
+    // Parent to the ROOT table, not the call site: run() is a different JVM frame,
+    // so the enclosing method's locals must not resolve here (their slot numbers
+    // would read this frame's unrelated locals).
+    val runSymbols = new SymbolTable(Some(globalSymbols.rootTable), "run")
     runSymbols.currentClass = Some(asyncClassName)
     runSymbols.asyncResultClass = Some(asyncClassName)
     runSymbols.putVariable("$this") // reserve local slot 0 for `this`

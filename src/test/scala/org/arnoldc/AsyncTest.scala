@@ -1,6 +1,23 @@
 package org.arnoldc
 
+import org.parboiled.errors.ParsingException
+
 class AsyncTest extends ArnoldGeneratorTest {
+
+  it should "reject referencing a variable declared outside the async block" in {
+    val code =
+      "IT'S SHOWTIME\n" +
+        "HEY CHRISTMAS TREE base\n" +
+        "YOU SET US UP 42\n" +
+        "COVER ME job\n" +
+        "I'LL BE BACK base\n" +
+        "MISSION COMPLETE\n" +
+        "HOLD THE LINE job\n" +
+        "YOU HAVE BEEN TERMINATED\n"
+    // The block runs on its own JVM frame: outer locals aren't capturable, so the
+    // reference must fail at compile time, not produce broken bytecode.
+    a[ParsingException] should be thrownBy getOutput(code)
+  }
 
   it should "run an async block, await it, and read the result" in {
     val code =

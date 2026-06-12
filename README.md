@@ -104,6 +104,9 @@ sbt test
 | **Continue** | `KEEP MOVING` | Various |
 | **Switch/Case** | `CHOOSE YOUR DESTINY` / `FINISH HIM` | Mortal Kombat |
 
+`GET OUT` breaks out of the innermost loop *or* switch; `KEEP MOVING` always continues
+the innermost loop, even from inside a switch.
+
 ### Data Types
 | Feature | Keyword | Movie |
 |---------|---------|-------|

@@ -37,7 +37,7 @@ case class RootNode(classes: List[ClassDefNode], methods: List[AbstractMethodNod
     val cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES)
     def generateClassHeader() = {
       cw.visit(V1_7, ACC_PUBLIC + ACC_SUPER, className, null, "java/lang/Object", null)
-      cw.visitSource("Hello.java", null)
+      cw.visitSource(className + ".actionc", null)
       // One program-wide stdin Scanner: a fresh Scanner per read would buffer ahead
       // and starve later reads under piped/redirected input.
       cw.visitField(ACC_PUBLIC + ACC_STATIC + ACC_FINAL, "$scanner", "Ljava/util/Scanner;", null, null).visitEnd()

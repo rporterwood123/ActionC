@@ -59,8 +59,18 @@ full 32-bit range (`SIPUSH` used to truncate anything past ±32767), made compar
 type-aware (string content equality via `String.equals`, float comparisons via
 `FCMPL`/`FCMPG` — see `ComparisonCodegen.scala`), and made async blocks
 exception-safe (`done` is set in a finally so `HOLD THE LINE` can't spin forever) on
-daemon threads. **`sbt test` →
-222 passing, 0 failing, 36 suites.** `sbt assembly` produces a runnable jar.
+daemon threads. A second pass the same day fixed try/catch/finally (the finally now
+runs when the catch body throws, and nested try blocks dispatch to the innermost
+handler), let `GET OUT` break out of a switch, scoped main's locals into their own
+frame table (so async blocks/lambdas referencing outer variables fail at compile time
+instead of miscompiling), enforced int-only method arguments/returns at compile time,
+made a value-returning method that ends without `I'LL BE BACK` throw instead of
+silently returning a default, and fixed the CLI: class names come from the source
+file's basename, all `.class` files land next to the source, `-run` works from
+subdirectories, parse errors print one line (exit 1) instead of a stack trace, and
+runtime stack traces blame `<program>.actionc` instead of a hardcoded `Hello.java`.
+**`sbt test` →
+236 passing, 0 failing, 37 suites.** `sbt assembly` produces a runnable jar.
 
 The implementation roadmap (`TODO.md`) has been removed now that all tiers are done;
 treat the verified test run as ground truth, and this file as the live guide.
@@ -251,8 +261,18 @@ stdlib, classes with constructors and inheritance, instance methods + `this`
 
 - **Conditions take a pre-computed boolean** (above) — the big one.
 - **Object fields are int-only.** No string/float/object fields.
+- **Methods are int-only too.** Arguments and `I'LL BE BACK` values must be integers —
+  passing or returning a string/float is a compile error. A value-returning method
+  that reaches its end without `I'LL BE BACK` throws at runtime.
+- **No closure capture.** Lambdas and async blocks run in their own JVM frame:
+  referencing a variable declared outside them is a compile error
+  (`VARIABLE: x NOT DECLARED!`) — pass values through parameters or declare inside.
 - **Lambdas** are top-level (declared like functions, not nested in `IT'S SHOWTIME`),
   and their body uses **infix** arithmetic: `CALL ME SNAKE double (x) => x YOU'RE FIRED 2`.
+- **`GET OUT` in a switch exits the switch** (cases never fall through anyway, so it's
+  only needed for an early exit); `KEEP MOVING` inside a switch continues the
+  enclosing loop. `finally` runs even when the catch body throws, and nested
+  try blocks dispatch to the innermost handler.
 - **Floats** support full arithmetic now (`GET UP`/`GET DOWN`/`YOU'RE FIRED`/`HE HAD TO
   SPLIT`/`I LET HIM GO` in an assignment block). Mixing an int into a float expression
   promotes the int automatically; a pure-int expression assigned into a float variable
